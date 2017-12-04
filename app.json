@@ -1,0 +1,10 @@
+{
+  "name": "List",
+  "displayName": "List",
+  "expo": {
+    "sdkVersion": "21.0.0",
+    "android": {
+      "package": "com.project.alfred"
+    }
+  }
+}

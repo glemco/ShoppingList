@@ -1,0 +1,47 @@
+smart shopping list           after pressing
+-------------------------     -------------------------
+| X                  $  |     | <-                 $  |
+|  Shopping list        |     |  Suggestions          |
+|¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬|     |¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬|
+|                       |     |  list                 |
+|                       |     |  of all               |
+|  insert               |     |  the products         |
+|  here                 |     |  that may be needed   |
+|  the lines       v x  |     |  (criteria on db)     |
+|  ..........           |     |                       |
+|                       |     |  select marks them    |
+|                       |     |  on submit they are   |
+|                       |     |  added in list        |
+|                       |     |                       |
+|      ___________      |     |      ___________      |
+|     / need help?\     |     |     /   done!   \     |
+|     \___________/     |     |     \___________/     |
+|                       |     |                       |
+-------------------------     -------------------------
+
+
+Data structures
+  All items inserted, hashed object
+  list.itemName = {itemName,lastDate,duration,(expiration?,state?)}
+
+  What I need/what I have (fridge) [just the name]
+  the frist array is the shopping list itself (suggestions are recomputed each time)
+    when removed from the fridge can go to shopping list (ask for)
+  second array is what has been removed by previous (bought), can be edited, notifications for expirations
+    deletion from here imply deletion on main (may ask for this)
+    while adding here if the record is new it appears with default values, otherwise update date and duration
+    when marked as done the element vanishes from here to appear in the fridge
+
+Components
+  lines in list trigger edit on touch and both done and delete buttons appear, touch out cancels the changes
+  lines in suggestions can be deleted (erases record)
+  $ is the fridge, the list is the same as suggestions, delete do not erases object
+  each time I add something in the shopping list the duration is updated (average), when item is marked as done it enters the fridge and the lastDate is updated (may assign expiration too in this stage)
+
+App (notes, done)
+  Shopping note -> data
+    MainList -> toBuy
+      EditableItems (fetched from toBuy)
+    Suggestions -> (all fetched)
+    Fridge -> fridge
+    

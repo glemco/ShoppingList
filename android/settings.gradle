@@ -1,0 +1,5 @@
+rootProject.name = 'list'
+
+include ':app'
+include ':ReactNativeKeyboardAwareScrollView'
+project(':ReactNativeKeyboardAwareScrollView').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keyboard-aware-scroll-view')
