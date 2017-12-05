@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, TouchableWithoutFeedback,
-        AsyncStorage, Button, Animated,Dimensions, 
+        AsyncStorage, Button, Animated,Dimensions,
+        TouchableNativeFeedback, AppState,
         ScrollView, Keyboard} from 'react-native';
+//import {Icon,} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EditableItem from './EditableItem';
 
 /*
@@ -23,6 +26,20 @@ import EditableItem from './EditableItem';
 const ITEM = 'toBuy';
 const BUTT_HEIGHT = 30;
 
+const styles = StyleSheet.create({
+  cont:{
+    flex:1,
+    backgroundColor:'khaki',
+  },
+  butt:{
+    width:'75%',
+    height:'20%',
+  },
+  icon:{
+    fontSize:25,
+    padding:2,
+  },
+});
 export default class ShopList extends React.Component {
 
   /*
@@ -33,25 +50,33 @@ export default class ShopList extends React.Component {
    */
   constructor(props){
     super(props);
-    console.log("ShopList starts");
-    this.fetchData().done();
+    //console.log("ShopList starts");
     this.state={data:{}};
+    this.fetchData().done();
     this.keyboardHeight = new Animated.Value(0);
+    this.saved=true;
     ShopList.data2 = {};
     ShopList.rem2 = {};
     ShopList.navigate = this.props.navigation.navigate.bind(this);
-    ShopList.receiveItems = this.receiveItems.bind(this);
+    ShopList.receiveItem = this.receiveItem.bind(this);
   }
 
   /*
    * These are used to get the keyboard event, on IOS the keyboardWill*
-   * event should work better, but it's not there for Android
+   * event should work better, but it's not there for Android.
+   * The AppState listener is used to call the saving to storage
+   * method when the app changes state (usually when it's closing)
+   * since the component is not unmounting and may lose data otherwise
    */
   componentWillMount(){
     this.keyboardDidShowLsnr = Keyboard.addListener('keyboardDidShow',
       this.keyboardDidShow);
     this.keyboardDidHideLsnr = Keyboard.addListener('keyboardDidHide',
       this.keyboardDidHide);
+    AppState.addEventListener('change', state => {
+      if(state!="active")
+        this.storeData().done(); //saves on close
+    });
   }
 
   /*
@@ -69,6 +94,9 @@ export default class ShopList extends React.Component {
     ).start();
   };
 
+  /*
+   * Restore it to 0
+   */
   keyboardDidHide = (event)=>{
     Animated.timing(
       this.keyboardHeight,{
@@ -78,32 +106,36 @@ export default class ShopList extends React.Component {
     ).start();
   };
 
+  /*
+   * Define the header button that leads to the fridge
+   */
   static navigationOptions = ({
-    headerRight:<Button
-          title="H"
-          color='rgba(0,0,0,0)'
-          style={{border:0}}
-          onPress={()=>ShopList.navigate("Fridge",
-            {updates:ShopList.getData2,sendBack:ShopList.receiveItems})}
-        />,
+    headerRight:(<TouchableNativeFeedback
+          style={{fontSize:100}}
+          onPress={()=>ShopList.navigate("Fridge",{updates:
+            ShopList.getData2,sendBack:ShopList.receiveItems})}>
+          <Icon name="fridge" style={styles.icon}/>
+        </TouchableNativeFeedback>),
   });
 
   /*
    * This is called when an EditableItem has been edited, with both 
    * arguments change from one to the other, otherwise it can just add
-   * or just delete. It ensures that the $new field stays in the bottom
-   * This method is also passing data to the main list (through methods
-   * inside its props), so adding, deleting and changing the position
-   * flag in there
+   * or just delete.This method is also passing data to the main list 
+   * (through methods inside its props), so adding, deleting and changing 
+   * the position flag in there. Direct deletion has prompt to ask, while 
+   * changing from a value to another the old one is deleted directly and 
+   * the new element takes its place and values (can be changed)
    */
   changeItem(oldVal,newVal){
     let tmp = this.state.data;
     if(oldVal==newVal)
       return;
+    this.saved=false; //something has changed
     delete tmp[oldVal];
     if(newVal && newVal.length){ //otherwise it's just a deletion
       tmp[newVal] = {name:newVal};
-      this.props.onChange("",newVal);
+      this.props.onChange(oldVal,newVal);
       if(this.props.getPos(newVal)=="fridge")
         this.props.changePos(newVal,"both");
       else
@@ -122,11 +154,6 @@ export default class ShopList extends React.Component {
             this.props.onChange(oldVal)}},
         ]
       );
-    if(oldVal!="$new"){ //was a change
-      delete tmp["$new"]; //put in the bottom
-      this.props.onChange(oldVal); //can be overridden with ask
-    }
-    tmp["$new"]={name: ""}; //needs to add new line at bottom
     this.setState({data:tmp}); //this will reload
   }
 
@@ -137,6 +164,7 @@ export default class ShopList extends React.Component {
    */
   sendItem(value){
     let tmp = this.state.data;
+    this.saved=false; //something has changed
     delete tmp[value];
     ShopList.data2[value] = {name:value}; //what to add to the fridge
     this.props.changePos(value,"fridge"); //moving
@@ -145,27 +173,25 @@ export default class ShopList extends React.Component {
 
   /*
    * The same as above but for removals from the fridge, it can be static
-   * directly since is not affecting the current list
+   * since is not affecting the current list
    */
   static sendRemItem(value){
     ShopList.rem2[value] = {}; //what to remove from the fridge
   }
 
   /*
-   * This method is called from the fridge/sugg while unmounting and it's
-   * passing the object containing all the elements that should be added 
-   * here, again takes care of the $new element
+   * This method is called from the fridge/sugg at every change, passing 
+   * the new value.
    */
-  receiveItems(obj){ //from the fridge
+  receiveItem(value){ //from the fridge or sugg
+    this.saved=false; //something has changed
     let tmp = this.state.data;
-    console.log("Updating shop");
-    Object.keys(obj).forEach(e=>
-      {tmp[e]={name:e}; //to update, changing position in called method
-       this.props.onChange("",e)});
-    delete tmp["$new"];
-    tmp["$new"] = {name: ""}; //to add in the end
+    console.log("Updating shop with "+value);
+    tmp[value]={name:value};
+    this.props.onChange("",value);
     this.setState({data:tmp});
   }
+
 
   /*
    * This method is used to set which EditableItem is actually focused
@@ -180,14 +206,14 @@ export default class ShopList extends React.Component {
 
   /*
    * Taking data from the local storage and saving it to the active 
-   * object, add the $new in the end, it's called in the constructor
+   * object, it's called in the constructor
    */
   async fetchData(){
     try{
       var tmp = await AsyncStorage.getItem(ITEM);
       tmp = tmp?JSON.parse(tmp):{}; 
-      tmp["$new"] = {name: ""}; //will be added in tmp
       this.setState({data:tmp});
+      console.log("Retrieving shopping");
     } catch(e){
       Alert.alert(
         'Error',
@@ -204,13 +230,20 @@ export default class ShopList extends React.Component {
   /*
    * Send updated data back to local storage, called while unmounting,
    * if the fridge did't take the values (it hasn't been opened), they
-   * are saved here, to avoid that data to be lost (both data2 and rem2)
+   * are saved here, to avoid that data to be lost (both data2 and rem2).
+   * The saving operation is blocked if there's nothing new (saved false)
+   * or if the control is out (will be called later to ensure the next
+   * frame passed the new data before saving here)
    */
   async storeData(){
     try{
+      if(this.saved)
+        return;
+      console.log("Saving Shoplist");
+      this.saved=true; //now it's saved
       var tmp = this.state.data;
       const ITEM2 = "fridge";
-      delete tmp["$new"];
+      delete tmp["$new"]; //no need to save it
       await AsyncStorage.setItem(ITEM,JSON.stringify(tmp));
       if(Object.keys(ShopList.data2).length || 
         Object.keys(ShopList.rem2).length){ //not been taken
@@ -242,7 +275,6 @@ export default class ShopList extends React.Component {
    */
   static getData2(){
     let tmp = ShopList.data2;
-    //console.log("Passing "+Object.keys(tmp));
     ShopList.data2 = {}; //empty after asked for
     return tmp;
   }
@@ -252,7 +284,6 @@ export default class ShopList extends React.Component {
    */
   static getRem2(){
     let tmp = ShopList.rem2;
-    console.log("Passing "+Object.keys(tmp));
     ShopList.rem2 = {}; //empty after asked for
     return tmp;
   }
@@ -263,10 +294,14 @@ export default class ShopList extends React.Component {
    * an unique key (React need it), the list is scrollable and outside
    * it's touchable, when the keyboard is up a View grows from 0 height
    * to almost the keyboard height, to shift the content to the visible
-   * part of the screen, the button leads to the suggestions
+   * part of the screen, the button leads to the suggestions. The $new
+   * item is added just here before rendering the whole stuff (without
+   * using a setState because it will cause infinite rendering)
    */
   render(){
     const {navigate} = this.props.navigation;
+    delete this.state.data["$new"]; //do it right before rendering
+    this.state.data["$new"]={name: ""}; //needs to add new line at bottom
     return( 
     <TouchableWithoutFeedback style={styles.cont}
       onPress={this.closeAll.bind(this)}>
@@ -307,19 +342,9 @@ export default class ShopList extends React.Component {
    */
   componentWillUnmount(){
     this.storeData().done();
-    console.log("ShopList stops");
+    //console.log("ShopList stops");
     this.keyboardDidShowLsnr.remove();
     this.keyboardDidHideLsnr.remove();
   }
 }
 
-const styles = StyleSheet.create({
-  cont:{
-    flex:1,
-    backgroundColor:'khaki',
-  },
-  butt:{
-    width:'75%',
-    height:'20%',
-  },
-});

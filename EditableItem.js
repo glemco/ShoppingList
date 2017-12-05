@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Alert,
         TouchableNativeFeedback} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 /*
  * Component used in the ShopList
@@ -81,12 +82,12 @@ export default class EditableItem extends React.Component{
           {this.state.tmp.length ? //can't submit empty
           (<TouchableNativeFeedback
             onPress={this.sendChange.bind(this)}>
-            <Text style={{width:'6%',padding:2}}>ok</Text>
+            <Icon name="done" style={styles.icon}/>
           </TouchableNativeFeedback>):null}
           {this.state.text.length ? //can't delete new one
           (<TouchableNativeFeedback
             onPress={this.delChange.bind(this)}>
-            <Text style={{width:'6%',padding:2}}>x</Text>
+            <Icon name="remove-shopping-cart" style={styles.icon}/>
           </TouchableNativeFeedback>):null}
         </View> 
       ) : (
@@ -94,7 +95,7 @@ export default class EditableItem extends React.Component{
           {this.state.text.length ? //can't delete new one
             (<TouchableNativeFeedback
               onPress={this.doneChange.bind(this)}>
-              <Text style={{width:'6%',padding:2}}>D</Text>
+              <Icon name="add-circle-outline" style={styles.icon}/>
             </TouchableNativeFeedback>):null}
           <TouchableNativeFeedback 
             onPress={this.editThis.bind(this)}>
@@ -121,5 +122,10 @@ const styles = StyleSheet.create({
     padding:2,
     backgroundColor:"royalblue",
     flexDirection:'row',
+  },
+  icon:{
+    fontSize:18,
+    padding:2,
+    paddingRight:6,
   },
 });

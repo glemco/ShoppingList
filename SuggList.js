@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, ScrollView,
         TextInput, TouchableNativeFeedback } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 /*
  * This list takes from the main one what Alfred thinks may be a useful
  * advice to put in the shopping list, it takes only items that are not
@@ -20,7 +22,7 @@ export default class SuggList extends React.Component{
 
   /*
    * Called when selecting an element, if the element is in the fridge,
-   * it also asks to remove it from there, in any case it marks it to
+   * it also asks to remove it from there, in any case it sends it to
    * be added and it updates it's position
    */
   addElement(value,isFridge){
@@ -40,6 +42,7 @@ export default class SuggList extends React.Component{
       );
     }
     this.setState({data:tmp});
+    this.props.sendBack(value); //send each time
   }
 
   /*
@@ -60,17 +63,13 @@ export default class SuggList extends React.Component{
           <TouchableNativeFeedback
             onPress={()=>this.addElement(e,
               this.props.data[e].position=="fridge")}>
-            <Text>{e}</Text>
+            <View style={{flexDirection:"row"}}>
+              <Icon name="add-shopping-cart" style={styles.icon}/>
+              <Text>{e}</Text>
+            </View>
           </TouchableNativeFeedback></View>))}
       </ScrollView>
     </View>;
-  }
-
-  /*
-   * On unmount send modifications back
-   */
-  componentWillUnmount(){
-    this.props.sendBack(this.state.data);
   }
 }
 
@@ -83,5 +82,10 @@ const styles = StyleSheet.create({
     height:30,
     padding:4,
     backgroundColor:"powderblue",
+  },
+  icon:{
+    fontSize:18,
+    padding:2,
+    paddingRight:6,
   },
 });

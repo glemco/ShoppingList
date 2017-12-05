@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, 
         Alert, TouchableNativeFeedback} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 /*
  * Component used in the FridgeList
@@ -28,7 +29,7 @@ export default class DeletableItem extends React.Component{
           <Text style={{flex:1}}>{this.state.text}</Text>
           <TouchableNativeFeedback
             onPress={this.delChange.bind(this)}>
-            <Text style={{width:'6%',padding:2}}>x</Text>
+            <Icon name="delete-sweep" style={styles.icon}/>
           </TouchableNativeFeedback>
         </View>);
   }
@@ -40,5 +41,10 @@ const styles = StyleSheet.create({
     padding:4,
     backgroundColor:"salmon",
     flexDirection:'row',
+  },
+  icon:{
+    fontSize:20,
+    padding:2,
+    paddingRight:4,
   },
 });

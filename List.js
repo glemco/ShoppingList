@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView,
-        AsyncStorage, Button} from 'react-native';
+        AsyncStorage, Button, AppState,} from 'react-native';
 import {StackNavigator,} from 'react-navigation';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
@@ -26,41 +26,53 @@ class TestMain extends React.Component{
   }
 
   render(){
-    return <View><ScrollView>{Object.keys(List.data)
-      .map(e=><Text key={e}>{e+"\t"+List.data[e].position}
+    return <View><ScrollView>{Object.keys(this.props.items)
+      .map(e=><Text key={e}>{e+"\t"+
+        this.props.items[e].position+"\t"+
+        this.props.items[e].duration/1000+"\t"+
+        (new Date(this.props.items[e].lastDate)).getMinutes()+"."+
+        (new Date(this.props.items[e].lastDate)).getSeconds()}
         </Text>)}</ScrollView></View>;
   }
 }
 
 const ITEM = 'mainList';
 const DAY = 86400*1000; //in ms
-const AVG_SET = .25; //sets importance of new value in average
+//const AVG_SET = .25; //sets importance of new value in average
+const AVG_SET = 1; //recomputes each time (100% on new value)
 
 /*
  * As it happens in the shopping list this function can both add and 
- * delete (not used to edit a field), when an element that was already
+ * delete, in case of a change the old value is directly deleted and
+ * its data is saved in the new entry if not already there (otherwise the 
+ * default behaviour applies), when an element that was already
  * there is added it's data are updated: the last date is set to the
- * current, the duration (in days) is computed as an average between 
+ * current, the duration (in ms) is computed as an average between 
  * the old duration and the new one (new date-last date), the relative 
  * weight can be tuned
  */
 function changeItem(oldVal,newVal){
   if(oldVal==newVal) //no change
     return;
+  List.saved=false; //something changed
   if(newVal && newVal.length){ //otherwise it's just a deletion
     if(List.data[newVal]){ //already in
-      console.log((1-AVG_SET)*List.data[newVal].duration);
+      console.log("ch"+AVG_SET*(new Date()-List.data[newVal].lastDate));
       List.data[newVal].duration = 
         (1-AVG_SET)*List.data[newVal].duration +
-        AVG_SET*(new Date()-List.data[newVal].lastDate)/DAY;
-      List.data[newVal].lastDate = new Date(); //update stats
-      //List.data[newVal].position = "toBuy"; //may need both value
-    } else
-      List.data[newVal] = {name:newVal,duration:15,
-        lastDate:(new Date()).getTime(),position:"toBuy"};
-  } else //if(oldVal.length) //there's a deletion
+        AVG_SET*(new Date()-List.data[newVal].lastDate);
+      List.data[newVal].lastDate = (new Date()).getTime(); //update stats
+    } else {
+      if(oldVal.length && oldVal!="$new"){
+        List.data[newVal] = List.data[oldVal]; //merge them
+        List.data[newVal].name = newVal; //update
+        delete List.data[oldVal]; //no more needed
+      } else
+        List.data[newVal] = {name:newVal,duration:15*DAY,
+          lastDate:(new Date()).getTime(),position:"toBuy"};
+    }
+  } else
     delete List.data[oldVal];
-  List.storeData().done();
 }
 
 /*
@@ -68,6 +80,7 @@ function changeItem(oldVal,newVal){
  * the positio (fridge, toBuy, etc)
  */
 function changePos(name,newPos){
+  List.saved=false; //something changed
   List.data[name].position = newPos;
 }
 
@@ -75,6 +88,8 @@ function changePos(name,newPos){
  * As above but a getter (used to make the 'both' position possible
  */
 function getPos(name){
+  if(!List.data[name])
+    return null;
   return List.data[name].position;
 }
 
@@ -96,7 +111,7 @@ const Nav = StackNavigator({
     screen: ({navigation})=>(<FridgeList
               updates={ShopList.getData2}
               deletions={ShopList.getRem2}
-              sendBack={ShopList.receiveItems}
+              sendBack={ShopList.receiveItem}
               changePos={changePos}
               getPos={getPos}
               navigation={navigation}
@@ -109,7 +124,7 @@ const Nav = StackNavigator({
   Sugg: {
     screen: ({navigation})=>(<SuggList
               data={List.data}
-              sendBack={ShopList.receiveItems}
+              sendBack={ShopList.receiveItem}
               sendRem={ShopList.sendRemItem}
               changePos={changePos}
               navigation={navigation}
@@ -128,8 +143,17 @@ export default class List extends React.Component {
 
   constructor(props){
     super(props);
-    console.log("List is starting");
+    //console.log("List is starting");
+    List.data={};
+    List.saved=true;
     this.fetchData().done();
+  }
+
+  componentWillMount(){
+    AppState.addEventListener('change', state => {
+      if(state!="active")
+        List.storeData().done(); //saves on close
+    });
   }
 
   /*
@@ -159,6 +183,9 @@ export default class List extends React.Component {
    */
   static async storeData(){
     try{
+      if(List.saved)
+        return;
+      console.log("Saving mainList");
       await AsyncStorage.setItem(ITEM,JSON.stringify(List.data));
     } catch(e){
       Alert.alert(
@@ -182,6 +209,6 @@ export default class List extends React.Component {
    */
   componentWillUnmount(){
     List.storeData().done();
-    console.log("List is done");
+    //console.log("List is done");
   }
 }

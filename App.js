@@ -5,6 +5,7 @@ import {StackNavigator,} from 'react-navigation';
 import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
+import RecipeSugg from './RecipeSugg';
 
 class Main extends React.Component{
   constructor(props){
@@ -23,6 +24,9 @@ class Main extends React.Component{
     return <View style={{flex:1}}>
               <Button title="Shopping List" 
                 onPress={()=>navigate("List")}/>
+              <Button title="Suggested Recipes"
+                color="chocolate"
+                onPress={()=>navigate("Recipes")}/>
               <Button title="Clear All" 
                 color="red"
                 onPress={()=>
@@ -62,6 +66,13 @@ const Nav = StackNavigator({
     screen: List,
     navigationOptions:({navigation})=> ({ 
       headerTitle: "Shopping List",
+      headerStyle: styles.bar,
+    }),
+  },
+  Recipes: {
+    screen: RecipeSugg,
+    navigationOptions:({navigation})=> ({ 
+      headerTitle: "Suggested Recipes",
       headerStyle: styles.bar,
     }),
   },
