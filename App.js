@@ -5,7 +5,7 @@ import {StackNavigator,} from 'react-navigation';
 import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
-import RecipeSugg from './RecipeSugg';
+import RecipeStack from './RecipeStack';
 
 class Main extends React.Component{
   constructor(props){
@@ -70,7 +70,7 @@ const Nav = StackNavigator({
     }),
   },
   Recipes: {
-    screen: RecipeSugg,
+    screen: RecipeStack,
     navigationOptions:({navigation})=> ({ 
       headerTitle: "Suggested Recipes",
       headerStyle: styles.bar,
