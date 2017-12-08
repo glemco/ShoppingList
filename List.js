@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView,
         AsyncStorage, Button, AppState,} from 'react-native';
 import {StackNavigator,} from 'react-navigation';
+import styles from './StyleSheet.js';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import SuggList from './SuggList';
@@ -12,13 +13,6 @@ import SuggList from './SuggList';
  * and each field has name,duration(days),lastDate(ms) 
  * and position {none,toBuy,fridge,both}
  */
-
-const styles = StyleSheet.create({
-  bar:{
-    backgroundColor:'goldenrod',
-    paddingTop:'7%',
-  },
-});
 
 class TestMain extends React.Component{
   constructor(props){
@@ -38,8 +32,8 @@ class TestMain extends React.Component{
 
 const ITEM = 'mainList';
 const DAY = 86400*1000; //in ms
-//const AVG_SET = .25; //sets importance of new value in average
-const AVG_SET = 1; //recomputes each time (100% on new value)
+const AVG_SET = .25; //sets importance of new value in average
+//const AVG_SET = 1; //recomputes each time (100% on new value)
 
 /*
  * As it happens in the shopping list this function can both add and 
@@ -57,7 +51,6 @@ function changeItem(oldVal,newVal){
   List.saved=false; //something changed
   if(newVal && newVal.length){ //otherwise it's just a deletion
     if(List.data[newVal]){ //already in
-      console.log("ch"+AVG_SET*(new Date()-List.data[newVal].lastDate));
       List.data[newVal].duration = 
         (1-AVG_SET)*List.data[newVal].duration +
         AVG_SET*(new Date()-List.data[newVal].lastDate);
@@ -143,7 +136,6 @@ export default class List extends React.Component {
 
   constructor(props){
     super(props);
-    //console.log("List is starting");
     List.data={};
     List.saved=true;
     this.fetchData().done();
@@ -209,6 +201,5 @@ export default class List extends React.Component {
    */
   componentWillUnmount(){
     List.storeData().done();
-    //console.log("List is done");
   }
 }

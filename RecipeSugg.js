@@ -3,11 +3,12 @@ import { StyleSheet, Text, View, Alert, ScrollView, Image,
         AsyncStorage, TouchableNativeFeedback, 
         ActivityIndicator,} from 'react-native';
 import Utils from './Utils.js';
+import styles from './StyleSheet.js';
 
 const BASE="http://allrecipes.com";
 const RECIPES=BASE+"/search/results/?ingIncl=";
-const MINLIM=7; //applied on overall recipes
-const MAXLIM=5; //to filterafter retrievement
+const MINLIM=5; //applied on overall recipes
+const MAXLIM=7; //to filterafter retrievement
 
 export default class RecipeSugg extends React.Component {
   constructor(props){
@@ -15,6 +16,7 @@ export default class RecipeSugg extends React.Component {
     this.fridge={};
     this.couples=[];
     this.triplets=[];
+    this.isOver=[false,false,false]; //singlets,couples and triplets
     this.state={data:[],loaded:false};
     this.fetchData();
   }
@@ -36,7 +38,7 @@ export default class RecipeSugg extends React.Component {
   async tryMatching(str,ind,end){
     function getTitle(elm){
       return elm.getElementsByTagName("h3")[0]
-        .firstChild.data.match(/([a-zA-Z']+ ?)+/)[0];
+        .firstChild.data.match(/([a-zA-Z'\-()]+ ?)+/)[0];
     }
     function getUrl(elm){
       return BASE+elm.getElementsByTagName("a")[0].
@@ -45,18 +47,17 @@ export default class RecipeSugg extends React.Component {
     function getImage(elm){
       var img=elm.getElementsByClassName(
           "grid-col__rec-image")[0]
-        .getAttribute("data-original-src").replace("250x250","50x50");
+        .getAttribute("data-original-src").replace("250x250","100x100");
       return img;
     }
     let tmp=this.state.data;
-    //let str=arr.reduce((a,b)=>a+","+b,"").substr(1); //no more needed
     let obj=await Utils.fetchPage(RECIPES+str);
     let resNum=parseInt(obj.getElementsByClassName("subtext")[0]
       .firstChild.data);
-    if(ind!=undefined && ind==end){
+    if(ind>=end)
+      this.isOver[str.split(",").length-1]=true;
+    if(this.isOver[0] && this.isOver[1] && this.isOver[2])
       this.setState({loaded:true});
-      console.log("done");
-    }
     if(resNum<MINLIM){ //not worth match
       console.log("Dropped "+str);
       return null;
@@ -66,8 +67,11 @@ export default class RecipeSugg extends React.Component {
         !e.getAttribute("class").match("video")
         && e.childNodes.length>4)
       .slice(0,MAXLIM);
-    results.forEach(e=>tmp.push({title:getTitle(e),ings:str,
-      url:getUrl(e),img:getImage(e),}));
+    results.forEach(e=>{let name=getTitle(e)
+      tmp[name]={title:name,ings:str,
+      url:getUrl(e),img:getImage(e),}});
+    //results.forEach(e=>tmp.push({title:getTitle(e),ings:str,
+    //  url:getUrl(e),img:getImage(e),}));
     this.setState({data:tmp});
     return resNum;
   }
@@ -79,12 +83,15 @@ export default class RecipeSugg extends React.Component {
     try{
       var tmp = await AsyncStorage.getItem("fridge");
       this.fridge=tmp?JSON.parse(tmp):{};
+      if(Object.keys(this.fridge).length<2) //no couples
+        this.isOver[1]=true;
+      if(Object.keys(this.fridge).length<3) //no triplets
+        this.isOver[2]=true;
       console.log("Retrieving fridge for recipes");
-      Object.keys(this.fridge).forEach(e=>this.tryMatching(e));
+      Object.keys(this.fridge).forEach((e,i,a)=>this.tryMatching(e,i,a.length-1));
       this.makeGroups();
-      this.couples.forEach(e=>this.tryMatching(e));
+      this.couples.forEach((e,i,a)=>this.tryMatching(e,i,a.length-1));
       this.triplets.forEach((e,i,a)=>this.tryMatching(e,i,a.length-1));
-      //this.setState({loaded:true}); //not working because of async
     } catch(e){
       Alert.alert(
         'Error',
@@ -102,22 +109,22 @@ export default class RecipeSugg extends React.Component {
     let arr=Object.keys(this.fridge);
       //.filter(e=>!this.fridge[e].notFood); //may implement this
     this.couples=RecipeSugg.makeCouples(arr);
-    if(arr.length>2)
-      this.triplets=RecipeSugg.makeTriplets(arr);
+    this.triplets=RecipeSugg.makeTriplets(arr);
   }
 
   render(){
-    return <ScrollView>
-        {this.state.data.map((e,i)=>
+    return <ScrollView style={styles.cont}>
+        {Object.keys(this.state.data).map((e,i)=>
           <TouchableNativeFeedback key={i}
             onPress={()=>this.props
-              .navigation.navigate("Recipe",{data:e})}>
-            <View style={styles.item}>
-              <Image source={{uri:e.img}} style={styles.img} />
+              .navigation.navigate("Recipe",{data:this.state.data[e]})}>
+            <View style={[styles.item,styles.itemBig]}>
+              <Image source={{uri:this.state.data[e].img}} 
+                style={styles.imgSmall} />
               <View style={{flex:1}}>
-                <Text>{e.title}</Text>
+                <Text>{this.state.data[e].title}</Text>
                 <Text style={{textAlign:"right",color:"lightslategrey"}}>
-                  {e.ings}</Text>
+                  {this.state.data[e].ings}</Text>
               </View>
             </View>
           </TouchableNativeFeedback>)
@@ -127,20 +134,3 @@ export default class RecipeSugg extends React.Component {
   }
 
 }
-
-const styles = StyleSheet.create({
-  item:{
-    height:50,
-    backgroundColor:"aliceblue",
-    flexDirection:"row",
-    margin:2,
-    marginBottom:5,
-    paddingLeft:10,
-    paddingRight:10,
-  },
-  img:{
-    width:46,
-    height:46,
-    marginRight:9,
-  },
-});

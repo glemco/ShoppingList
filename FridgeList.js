@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Alert, ScrollView,
         AsyncStorage, Button, AppState,} from 'react-native';
 import DeletableItem from './DeletableItem';
+import styles from './StyleSheet.js';
 
 /*
  * Here is the fridge page, it retrieves the content of the fridge, 
@@ -133,10 +134,3 @@ export default class FridgeList extends React.Component {
     this.storeData().done();
   }
 }
-
-const styles = StyleSheet.create({
-  cont:{
-    flex:1,
-    backgroundColor:'azure',
-  },
-});

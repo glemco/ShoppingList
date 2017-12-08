@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, 
         Alert, TouchableNativeFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import styles from './StyleSheet.js';
 
 /*
  * Component used in the FridgeList
@@ -34,17 +35,3 @@ export default class DeletableItem extends React.Component{
         </View>);
   }
 }
-
-const styles = StyleSheet.create({
-  item:{
-    height:30,
-    padding:4,
-    backgroundColor:"salmon",
-    flexDirection:'row',
-  },
-  icon:{
-    fontSize:20,
-    padding:2,
-    paddingRight:4,
-  },
-});

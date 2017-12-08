@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Alert,
         AsyncStorage, Button} from 'react-native';
 import {StackNavigator,} from 'react-navigation';
+import styles from './StyleSheet.js';
 import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
@@ -42,17 +43,6 @@ class Main extends React.Component{
   }
 
 }
-
-const styles = StyleSheet.create({
-  bar:{
-    backgroundColor:'olive',
-    paddingTop:'10%',
-  },
-  container: {
-    flex: 1,
-    justifyContent:'center',
-  },
-});
 
 const Nav = StackNavigator({
   Main: {

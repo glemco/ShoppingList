@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Alert,
         TouchableNativeFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import styles from './StyleSheet.js';
 
 /*
  * Component used in the ShopList
@@ -71,7 +72,7 @@ export default class EditableItem extends React.Component{
    */
   render(){
     return this.state.edit ? (
-        <View style={styles.editItem}>
+        <View style={styles.item}>
           <TextInput
             value={this.state.tmp}
             placeholder="Add new item"
@@ -91,7 +92,7 @@ export default class EditableItem extends React.Component{
           </TouchableNativeFeedback>):null}
         </View> 
       ) : (
-        <View style={styles.steadyItem}>
+        <View style={styles.item}>
           {this.state.text.length ? //can't delete new one
             (<TouchableNativeFeedback
               onPress={this.doneChange.bind(this)}>
@@ -109,23 +110,3 @@ export default class EditableItem extends React.Component{
       );
   }
 }
-
-const styles = StyleSheet.create({
-  steadyItem:{
-    height:30,
-    padding:4,
-    backgroundColor:"gray",
-    flexDirection:'row',
-  },
-  editItem:{
-    height:30,
-    padding:2,
-    backgroundColor:"royalblue",
-    flexDirection:'row',
-  },
-  icon:{
-    fontSize:18,
-    padding:2,
-    paddingRight:6,
-  },
-});

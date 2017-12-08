@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Alert, TouchableWithoutFeedback,
         AsyncStorage, Button, Animated,Dimensions,
         TouchableNativeFeedback, AppState,
         ScrollView, Keyboard} from 'react-native';
-//import {Icon,} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import styles from './StyleSheet.js';
 import EditableItem from './EditableItem';
 
 /*
@@ -26,20 +26,6 @@ import EditableItem from './EditableItem';
 const ITEM = 'toBuy';
 const BUTT_HEIGHT = 30;
 
-const styles = StyleSheet.create({
-  cont:{
-    flex:1,
-    backgroundColor:'khaki',
-  },
-  butt:{
-    width:'75%',
-    height:'20%',
-  },
-  icon:{
-    fontSize:25,
-    padding:2,
-  },
-});
 export default class ShopList extends React.Component {
 
   /*
@@ -50,7 +36,6 @@ export default class ShopList extends React.Component {
    */
   constructor(props){
     super(props);
-    //console.log("ShopList starts");
     this.state={data:{}};
     this.fetchData().done();
     this.keyboardHeight = new Animated.Value(0);
@@ -114,7 +99,7 @@ export default class ShopList extends React.Component {
           style={{fontSize:100}}
           onPress={()=>ShopList.navigate("Fridge",{updates:
             ShopList.getData2,sendBack:ShopList.receiveItems})}>
-          <Icon name="fridge" style={styles.icon}/>
+          <Icon name="fridge" style={[styles.icon,{fontSize:30}]}/>
         </TouchableNativeFeedback>),
   });
 
@@ -300,12 +285,12 @@ export default class ShopList extends React.Component {
    */
   render(){
     const {navigate} = this.props.navigation;
-    delete this.state.data["$new"]; //do it right before rendering
-    this.state.data["$new"]={name: ""}; //needs to add new line at bottom
+    //delete this.state.data["$new"]; //do it right before rendering
+    //this.state.data["$new"]={name: ""}; //needs to add new line at bottom
     return( 
-    <TouchableWithoutFeedback style={styles.cont}
+    <TouchableWithoutFeedback style={{flex:1}}
       onPress={this.closeAll.bind(this)}>
-      <View style={{flex:1}}>
+      <View style={styles.cont}>
         <ScrollView keyboardShouldPersistTaps="always">
           {Object.keys(this.state.data)
             .map((item) => (<EditableItem 
@@ -316,17 +301,25 @@ export default class ShopList extends React.Component {
               closeOthers={this.closeAll.bind(this)}
               onChange={this.changeItem.bind(this)}
               onDone={this.sendItem.bind(this)}/>))}
+          <EditableItem 
+              key={"$new"+(new Date()).getTime()}
+              propKey="$new"
+              active={this.state.active=="$new"?'y':'n'}
+              text=""
+              closeOthers={this.closeAll.bind(this)}
+              onChange={this.changeItem.bind(this)}
+              onDone={this.sendItem.bind(this)}/>
         </ScrollView>
         <Animated.View style={{height:this.keyboardHeight,
           left:0,right:0,bottom:0}}/>
         <Button 
           title="Need help?"
-          style={styles.butt}
+          style={styles.item}
           color="teal"
           onPress={()=>navigate("Sugg")}/>
         <Button 
-          title="Test"
-          style={styles.butt}
+          title="Test (I'll not be there)"
+          style={styles.item}
           color="indigo"
           onPress={()=>navigate("Test")}/>
       </View>
@@ -342,7 +335,6 @@ export default class ShopList extends React.Component {
    */
   componentWillUnmount(){
     this.storeData().done();
-    //console.log("ShopList stops");
     this.keyboardDidShowLsnr.remove();
     this.keyboardDidHideLsnr.remove();
   }

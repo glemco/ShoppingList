@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Alert, ScrollView,
         TextInput, TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import styles from './StyleSheet.js';
 
 /*
  * This list takes from the main one what Alfred thinks may be a useful
@@ -72,20 +73,3 @@ export default class SuggList extends React.Component{
     </View>;
   }
 }
-
-const styles = StyleSheet.create({
-  cont:{
-    flex:1,
-    backgroundColor:'palegreen',
-  },
-  item:{
-    height:30,
-    padding:4,
-    backgroundColor:"powderblue",
-  },
-  icon:{
-    fontSize:18,
-    padding:2,
-    paddingRight:6,
-  },
-});
