@@ -5,6 +5,10 @@ import styles from './StyleSheet.js';
 import RecipeSugg from './RecipeSugg';
 import BlankRecipe from './BlankRecipe';
 
+/*
+ * Simple stack navigator that displays the recipes list by default and,
+ * while tapping on them, opens a new page with the related information
+ */
 const Nav = StackNavigator({
   Main: {
     screen: RecipeSugg,
@@ -29,9 +33,5 @@ export default class App extends React.Component {
 
   render(){
     return <Nav />;
-  }
-
-  componentWillUnmount(){
-    console.log("I'm done");
   }
 }

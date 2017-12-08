@@ -216,9 +216,7 @@ export default class ShopList extends React.Component {
    * Send updated data back to local storage, called while unmounting,
    * if the fridge did't take the values (it hasn't been opened), they
    * are saved here, to avoid that data to be lost (both data2 and rem2).
-   * The saving operation is blocked if there's nothing new (saved false)
-   * or if the control is out (will be called later to ensure the next
-   * frame passed the new data before saving here)
+   * The saving operation is blocked if there's nothing new (saved=false)
    */
   async storeData(){
     try{
@@ -228,7 +226,6 @@ export default class ShopList extends React.Component {
       this.saved=true; //now it's saved
       var tmp = this.state.data;
       const ITEM2 = "fridge";
-      delete tmp["$new"]; //no need to save it
       await AsyncStorage.setItem(ITEM,JSON.stringify(tmp));
       if(Object.keys(ShopList.data2).length || 
         Object.keys(ShopList.rem2).length){ //not been taken
@@ -285,8 +282,6 @@ export default class ShopList extends React.Component {
    */
   render(){
     const {navigate} = this.props.navigation;
-    //delete this.state.data["$new"]; //do it right before rendering
-    //this.state.data["$new"]={name: ""}; //needs to add new line at bottom
     return( 
     <TouchableWithoutFeedback style={{flex:1}}
       onPress={this.closeAll.bind(this)}>

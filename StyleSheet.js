@@ -1,6 +1,9 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
+/*
+ * Styles for the whole part (may be merged with complete app stylesheet)
+ */
 module.exports = StyleSheet.create({
   bar:{
     backgroundColor:'olive',
@@ -10,10 +13,17 @@ module.exports = StyleSheet.create({
   },
   cont:{
     flex:1,
-    padding:6,
+    padding:10,
   },
   title:{
     fontSize:25,
+  },
+  caption:{
+    textAlign:"right",
+    color:"lightslategrey",
+  },
+  li:{
+    marginLeft:10,
   },
   item:{
     height:50,
@@ -33,6 +43,7 @@ module.exports = StyleSheet.create({
     height:80,
     paddingLeft:10,
     paddingRight:10,
+    alignItems:"stretch",
   },
   imgCont:{
     justifyContent:'center',
