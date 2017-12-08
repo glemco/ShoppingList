@@ -1,0 +1,50 @@
+import React from 'react';
+import {StyleSheet} from 'react-native';
+
+module.exports = StyleSheet.create({
+  bar:{
+    backgroundColor:'olive',
+    paddingTop:36,
+    paddingBottom:14,
+    height:80,
+  },
+  cont:{
+    flex:1,
+    padding:6,
+  },
+  title:{
+    fontSize:25,
+  },
+  item:{
+    height:50,
+    padding:6,
+    flexDirection:'row',
+    alignItems:"center",
+    margin:2,
+    marginBottom:5,
+    backgroundColor:"aliceblue",
+  },
+  icon:{
+    fontSize:20,
+    padding:2,
+    paddingRight:6,
+  },
+  itemBig:{
+    height:80,
+    paddingLeft:10,
+    paddingRight:10,
+  },
+  imgCont:{
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  imgSmall:{
+    width:70,
+    height:70,
+    marginRight:16,
+  },
+  imgBig:{
+    width:350,
+    height:180,
+  },
+});
