@@ -70,7 +70,7 @@ export default class RecipeSugg extends React.Component {
   async tryMatching(str,ind,end){
     function getTitle(elm){
       return elm.getElementsByTagName("h3")[0]
-        .firstChild.data.match(/([a-zA-Z'\-()]+ ?)+/)[0];
+        .firstChild.data.match(/([a-zA-Z0-9'\-(),]+ ?)+/)[0];
     }
     function getUrl(elm){
       return BASE+elm.getElementsByTagName("a")[0].
@@ -168,7 +168,8 @@ export default class RecipeSugg extends React.Component {
         {Object.keys(this.state.data).map((e,i)=>
           <TouchableNativeFeedback key={i}
             onPress={()=>this.props
-              .navigation.navigate("Recipe",{data:this.state.data[e]})}>
+              .navigation.navigate("Recipe",{data:this.state.data[e],
+                fridge:this.fridge})}>
             <View style={[styles.item,styles.itemBig]}>
               <Image source={{uri:this.state.data[e].img}} 
                 style={styles.imgSmall} />

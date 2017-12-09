@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ActivityIndicator,
-  ScrollView, Image, TouchableWithoutFeedback,} from 'react-native';
+import { Text, View, ActivityIndicator, AsyncStorage,
+  TouchableNativeFeedback, AppState, Alert,
+  ScrollView, Image, TouchableWithoutFeedback, } from 'react-native';
 import styles from './StyleSheet.js';
 import Utils from './Utils.js';
+import ModalSelector from './ModalSelector';
 
 /*
  * General page displaying a recipe, it receives the recipe data from the
@@ -14,8 +16,17 @@ export default class BlankRecipe extends React.Component{
     super(props);
     this.data = this.props.navigation.state.params.data;
     console.log(this.data.url);
-    this.state={ingredients:[],images:[],imgNum:0,directions:[]};
+    this.state={ingredients:[],images:[],imgNum:0,directions:[],
+      ingSplit:[],openModal:false,};
+    this.shopData={};
     this.fetchData().done;
+  }
+
+  componentWillMount(){
+    AppState.addEventListener('change', state => {
+      if(state!="active")
+        this.storeData().done(); //saves on close
+    });
   }
 
   /*
@@ -48,6 +59,38 @@ export default class BlankRecipe extends React.Component{
       directions:directions});
   }
 
+  async storeData(){
+    const ITEM = 'toBuy';
+    const ITEM2 = 'mainList';
+    try{
+      if(Object.keys(this.shopData).length){
+        console.log("Saving "+Object.keys(this.shopData));
+        var tmp = await AsyncStorage.getItem(ITEM);
+        tmp = tmp?JSON.parse(tmp):{};
+        var tmp2 = await AsyncStorage.getItem(ITEM2);
+        tmp2 = tmp2?JSON.parse(tmp2):{};
+        Object.assign(tmp,this.shopData);
+        Object.keys(this.shopData).forEach(e=>
+          tmp2[e]={name:e,duration:tmp2[e]?tmp2[e].duration:0,
+            lastDate:(new Date()).getTime(),position:"toBuy"});
+        await AsyncStorage.setItem(ITEM,JSON.stringify(tmp));
+        await AsyncStorage.setItem(ITEM2,JSON.stringify(tmp2));
+        this.shopData={};
+      }
+    } catch(e){
+      Alert.alert(
+        'Error',
+        'An error occurred while saving the content',
+        [
+          {text: 'Cancel', onPress: () => console.log(e), style: 'cancel'},
+          {text: 'Retry', onPress: () => console.log('Retry Pressed')},
+        ],
+        {cancelable:false}
+      );
+    }
+  }
+
+
   /*
    * Used to rotate among images, at each tap the index advances showing
    * the next image in the array (cyclic)
@@ -58,14 +101,45 @@ export default class BlankRecipe extends React.Component{
     });
   }
 
+  openModal(label){
+    var tmp=label.split(" ").filter(e=>!e.match(/[0-9()]/))
+      .filter(e=>!e.match(/\bcup(s)?\b/))
+      .filter(e=>!e.match(/spoon(s)?\b/))
+      .filter(e=>!e.match(/\bcan(s)?\b/))
+      .filter(e=>!e.match(/\bpound(s)?\b/))
+      .filter(e=>!e.match(/\bounce(s)?\b/))
+      .filter(e=>!e.match(/\bpackage(s)?\b/))
+      .filter(e=>!e.match(/\bpiece(s)?\b/))
+      .filter(e=>!e.match("size"))
+      .filter(e=>!e.match(/\bslice[sd]?\b/)) //may go on
+      .filter(e=>e.length>2)
+      .map(e=>e.match(/[A-Za-z\-]+/)[0]);
+    tmp.forEach((e,i,a)=>a[i+1] && !a[i+1].includes(" ")?
+      a.push(e+" "+a[i+1]):null);
+    this.setState({openModal:true,ingSplit:tmp});
+  }
+
+  toSend(value){
+    if(this.props.navigation.state.params.fridge[value]){
+      Alert.alert("","Item "+value+" is already in the fridge",
+        [{text: "OK", onPress:()=>null}]);
+      return;
+    }
+    this.shopData[value]={name:value};
+  }
+
   /*
    * Rendering of all this stuff, everything needed is stored in the
    * state (to ensure reloading), while loading the page (before arrays
    * are filled), an ActivityIndicator is displayed
+          items={this.getIngSplit}
    */
   render(){
     return this.state.images.length?
       <ScrollView>
+        <ModalSelector isVisible={this.state.openModal}
+          items={this.state.ingSplit}
+          onSubmit={this.toSend.bind(this)}/>
         <View style={styles.cont}>
           <TouchableWithoutFeedback
             onPress={this.imgUp.bind(this)}>
@@ -79,7 +153,14 @@ export default class BlankRecipe extends React.Component{
           </TouchableWithoutFeedback>
           <Text style={styles.title}>Ingredients</Text>
           {this.state.ingredients.map((e,i)=>
-          <Text key={"ing"+i} style={styles.li}>&#8900; {e}</Text>)}
+          <View key={"ing"+i} style={[styles.item,styles.itemSmall]}>
+            <TouchableNativeFeedback onPress={()=>this.openModal(e)}>
+              <Text style={styles.li}>&#8900; {e}</Text>
+            </TouchableNativeFeedback>
+          </View>)}
+          <Text style={styles.caption}>
+            Tap on an ingredient to add it to the shopping list
+          </Text>
           <Text style={styles.title}>Directions</Text>
           {this.state.directions.map((e,i)=>
           <Text key={"dir"+i} style={styles.li}>{e}</Text>)}
@@ -88,5 +169,10 @@ export default class BlankRecipe extends React.Component{
       <View style={{justifyContent:"center",flex:1}}>
         <ActivityIndicator size="large"/>
       </View>
+
+  }
+
+  componentWillUnmount(){
+    this.storeData().done();
   }
 }

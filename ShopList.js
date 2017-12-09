@@ -24,7 +24,7 @@ import EditableItem from './EditableItem';
  */
 
 const ITEM = 'toBuy';
-const BUTT_HEIGHT = 30;
+const BUTT_HEIGHT = 80;
 
 export default class ShopList extends React.Component {
 
@@ -97,8 +97,7 @@ export default class ShopList extends React.Component {
   static navigationOptions = ({
     headerRight:(<TouchableNativeFeedback
           style={{fontSize:100}}
-          onPress={()=>ShopList.navigate("Fridge",{updates:
-            ShopList.getData2,sendBack:ShopList.receiveItems})}>
+          onPress={()=>ShopList.navigate("Fridge")}>
           <Icon name="fridge" style={[styles.icon,{fontSize:30}]}/>
         </TouchableNativeFeedback>),
   });
@@ -162,6 +161,7 @@ export default class ShopList extends React.Component {
    */
   static sendRemItem(value){
     ShopList.rem2[value] = {}; //what to remove from the fridge
+    this.saved=false;
   }
 
   /*
@@ -229,13 +229,13 @@ export default class ShopList extends React.Component {
       await AsyncStorage.setItem(ITEM,JSON.stringify(tmp));
       if(Object.keys(ShopList.data2).length || 
         Object.keys(ShopList.rem2).length){ //not been taken
-        tmp = await AsyncStorage.getItem(ITEM2);
-        tmp = tmp?JSON.parse(tmp):{};
+        let tmp2 = await AsyncStorage.getItem(ITEM2);
+        tmp2 = tmp2?JSON.parse(tmp2):{};
         Object.keys(ShopList.getData2()).forEach(e=>
-          tmp[e]={name:e}); //add them
+          tmp2[e]={name:e}); //add them
         Object.keys(ShopList.getRem2()).forEach(e=>
-          delete tmp[e]); //remove them
-        await AsyncStorage.setItem(ITEM2,JSON.stringify(tmp));
+          delete tmp2[e]); //remove them
+        await AsyncStorage.setItem(ITEM2,JSON.stringify(tmp2));
       }
     } catch(e){
       Alert.alert(
@@ -257,6 +257,7 @@ export default class ShopList extends React.Component {
    */
   static getData2(){
     let tmp = ShopList.data2;
+    console.log("Adding "+Object.keys(tmp));
     ShopList.data2 = {}; //empty after asked for
     return tmp;
   }
@@ -266,6 +267,7 @@ export default class ShopList extends React.Component {
    */
   static getRem2(){
     let tmp = ShopList.rem2;
+    console.log("Removing "+Object.keys(tmp));
     ShopList.rem2 = {}; //empty after asked for
     return tmp;
   }

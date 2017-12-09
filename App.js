@@ -7,6 +7,7 @@ import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import RecipeStack from './RecipeStack';
+import ModalSelector from './ModalSelector';
 
 class Main extends React.Component{
   constructor(props){

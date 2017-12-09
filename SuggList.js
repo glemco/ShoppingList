@@ -52,7 +52,7 @@ export default class SuggList extends React.Component{
    * passing also if the element was in the fridge
    */
   render(){
-    return <View>
+    return <View style={styles.cont}>
     <ScrollView>
       {Object.keys(this.props.data)
         .filter(e=>(new Date()-this.props.data[e].lastDate)>

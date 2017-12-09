@@ -16,7 +16,8 @@ module.exports = StyleSheet.create({
     padding:10,
   },
   title:{
-    fontSize:25,
+    fontSize:20,
+    fontWeight:"bold",
   },
   caption:{
     textAlign:"right",
@@ -34,16 +35,20 @@ module.exports = StyleSheet.create({
     marginBottom:5,
     backgroundColor:"aliceblue",
   },
-  icon:{
-    fontSize:20,
-    padding:2,
-    paddingRight:6,
+  itemSmall:{
+    height:30,
+    backgroundColor:undefined,
   },
   itemBig:{
     height:80,
     paddingLeft:10,
     paddingRight:10,
     alignItems:"stretch",
+  },
+  icon:{
+    fontSize:20,
+    padding:2,
+    paddingRight:6,
   },
   imgCont:{
     justifyContent:'center',

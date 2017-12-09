@@ -43,7 +43,9 @@ const AVG_SET = .25; //sets importance of new value in average
  * there is added it's data are updated: the last date is set to the
  * current, the duration (in ms) is computed as an average between 
  * the old duration and the new one (new date-last date), the relative 
- * weight can be tuned
+ * weight can be tuned.
+ * The default duration should be something like 1 or 2 weeks (deps on
+ * statistics) here it's 0 for testing purposes
  */
 function changeItem(oldVal,newVal){
   if(oldVal==newVal) //no change
@@ -60,8 +62,8 @@ function changeItem(oldVal,newVal){
         List.data[newVal] = List.data[oldVal]; //merge them
         List.data[newVal].name = newVal; //update
         delete List.data[oldVal]; //no more needed
-      } else
-        List.data[newVal] = {name:newVal,duration:15*DAY,
+      } else //default duration should be much more than 0
+        List.data[newVal] = {name:newVal,duration:0,
           lastDate:(new Date()).getTime(),position:"toBuy"};
     }
   } else
