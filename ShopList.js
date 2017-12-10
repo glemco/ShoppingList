@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TouchableWithoutFeedback,
-        AsyncStorage, Button, Animated,Dimensions,
+import { Text, View, Alert, TouchableWithoutFeedback,
+        AsyncStorage, Button, Animated, Dimensions,
         TouchableNativeFeedback, AppState,
         ScrollView, Keyboard} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,7 +24,7 @@ import EditableItem from './EditableItem';
  */
 
 const ITEM = 'toBuy';
-const BUTT_HEIGHT = 80;
+const BUTT_HEIGHT = 140;
 
 export default class ShopList extends React.Component {
 
@@ -94,13 +94,15 @@ export default class ShopList extends React.Component {
   /*
    * Define the header button that leads to the fridge
    */
-  static navigationOptions = ({
-    headerRight:(<TouchableNativeFeedback
-          style={{fontSize:100}}
-          onPress={()=>ShopList.navigate("Fridge")}>
-          <Icon name="fridge" style={[styles.icon,{fontSize:30}]}/>
-        </TouchableNativeFeedback>),
-  });
+  static navigationOptions(){
+    return {
+      headerRight:(<TouchableNativeFeedback
+            style={{fontSize:100}}
+            onPress={()=>ShopList.navigate("Fridge")}>
+            <Icon name="fridge" style={[styles().icon,{fontSize:30}]}/>
+          </TouchableNativeFeedback>),
+    };
+  }
 
   /*
    * This is called when an EditableItem has been edited, with both 
@@ -287,7 +289,7 @@ export default class ShopList extends React.Component {
     return( 
     <TouchableWithoutFeedback style={{flex:1}}
       onPress={this.closeAll.bind(this)}>
-      <View style={styles.cont}>
+      <View style={styles().cont}>
         <ScrollView keyboardShouldPersistTaps="always">
           {Object.keys(this.state.data)
             .map((item) => (<EditableItem 
@@ -309,14 +311,16 @@ export default class ShopList extends React.Component {
         </ScrollView>
         <Animated.View style={{height:this.keyboardHeight,
           left:0,right:0,bottom:0}}/>
-        <Button 
-          title="Need help?"
-          style={styles.item}
+        <TouchableNativeFeedback
           color="teal"
-          onPress={()=>navigate("Sugg")}/>
+          onPress={()=>navigate("Sugg")}>
+          <View style={styles().button}>
+            <Text style={styles().label}>NEED HELP?</Text>
+          </View>
+        </TouchableNativeFeedback>
         <Button 
           title="Test (I'll not be there)"
-          style={styles.item}
+          style={styles().button}
           color="indigo"
           onPress={()=>navigate("Test")}/>
       </View>
@@ -336,4 +340,3 @@ export default class ShopList extends React.Component {
     this.keyboardDidHideLsnr.remove();
   }
 }
-

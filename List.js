@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView,
-        AsyncStorage, Button, AppState,} from 'react-native';
+import { Text, View, ScrollView, StyleSheet,
+        AsyncStorage, AppState,} from 'react-native';
 import {StackNavigator,} from 'react-navigation';
 import styles from './StyleSheet.js';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import SuggList from './SuggList';
+import ColorSets from './ColorSets';
 
 /*
  * List.data is a static attribute accessible through functions
@@ -33,7 +34,6 @@ class TestMain extends React.Component{
 const ITEM = 'mainList';
 const DAY = 86400*1000; //in ms
 const AVG_SET = .25; //sets importance of new value in average
-//const AVG_SET = 1; //recomputes each time (100% on new value)
 
 /*
  * As it happens in the shopping list this function can both add and 
@@ -72,7 +72,7 @@ function changeItem(oldVal,newVal){
 
 /*
  * Passed to any component that may need it, it's a simple setter for
- * the positio (fridge, toBuy, etc)
+ * the position (fridge, toBuy, etc)
  */
 function changePos(name,newPos){
   List.saved=false; //something changed
@@ -98,8 +98,9 @@ const Nav = StackNavigator({
                   />),
     navigationOptions:({navigation})=> ({ 
       headerTitle: "Shopping List",
-      headerStyle: styles.bar,
-      headerRight: ShopList.navigationOptions.headerRight,
+      headerStyle: styles().bar,
+      headerTitleStyle: styles().barText,
+      headerRight: ShopList.navigationOptions().headerRight,
     }),
   },
   Fridge: {
@@ -111,10 +112,12 @@ const Nav = StackNavigator({
               getPos={getPos}
               navigation={navigation}
             />),
-    navigationOptions: { 
+    navigationOptions: ()=>({ 
       headerTitle: "Fridge List",
-      headerStyle: styles.bar,
-    },
+      headerStyle: styles().bar,
+      headerTitleStyle: styles().barText,
+      headerTintColor: StyleSheet.flatten(styles().title).color,
+    }),
   },
   Sugg: {
     screen: ({navigation})=>(<SuggList
@@ -124,10 +127,12 @@ const Nav = StackNavigator({
               changePos={changePos}
               navigation={navigation}
             />),
-    navigationOptions: { 
+    navigationOptions: ()=>({ 
       headerTitle: "Suggestions List",
-      headerStyle: styles.bar,
-    },
+      headerStyle: styles().bar,
+      headerTitleStyle: styles().barText,
+      headerTintColor: StyleSheet.flatten(styles().title).color,
+    }),
   },
   Test: {
     screen: ()=>(<TestMain items={List.data}/>),
@@ -137,9 +142,11 @@ const Nav = StackNavigator({
 export default class List extends React.Component {
 
   constructor(props){
+    console.log();
     super(props);
     List.data={};
     List.saved=true;
+    List.colors=ColorSets.getStylesheet();
     this.fetchData().done();
   }
 

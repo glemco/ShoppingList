@@ -12,10 +12,18 @@ export default class ModalSelector extends React.Component{
     this.state={open:this.props.isVisible};
   }
 
+  /*
+   * Change the state when props get updated (to be able to manage it 
+   * in here too
+   */
   componentWillReceiveProps(newProps){
     this.setState({open:newProps.isVisible,selected:undefined});
   }
 
+  /*
+   * select the data to send and call the submit method, if the textbox 
+   * is selected, it's content will be sent instead
+   */
   sendData(){
     let val=this.state.selected=="$other"?
       this.state.other:this.state.selected;
@@ -23,15 +31,22 @@ export default class ModalSelector extends React.Component{
     this.setState({open:false});
   }
 
+  /*
+   * Modal structure with touchable area outside to close it, touchable
+   * inside to ensure it won't close (basically it's doing nothing but 
+   * getting touches), a title in the top, the list with radio-like
+   * buttons and a textbox in the end and finally the 2 buttons to submit
+   * and close 
+   */
   render(){
     return <Modal onRequestClose={() => null} animationType="fade" 
       visible={this.state.open} transparent={true}>
       <TouchableWithoutFeedback onPress={()=>this.setState({open:false})}>
-        <View style={modStyles.modBack}>
+        <View style={styles().modBack}>
           <TouchableWithoutFeedback onPress={()=>null}>
-            <View style={modStyles.modCont}>
-              <View style={modStyles.modHead}>
-                <Text style={styles.title}>
+            <View style={styles().modCont}>
+              <View style={styles().modHead}>
+                <Text style={styles().title}>
                   Which ingredient would you like to add?
                 </Text>
               </View>
@@ -39,34 +54,36 @@ export default class ModalSelector extends React.Component{
                 {this.props.items.map((e,i)=>
                 <TouchableNativeFeedback key={i}
                   onPress={()=>this.setState({selected:e})}>
-                  <View style={[styles.item,styles.itemSmall]}>
+                  <View style={[styles().item,styles().itemSmall]}>
                     <Icon name={this.state.selected==e?
                         "radiobox-marked":"radiobox-blank"}
-                      style={styles.icon}/>
-                    <Text>{e}</Text>
+                      style={styles().icon}/>
+                    <Text style={styles().txt}>{e}</Text>
                   </View>
                 </TouchableNativeFeedback>)}
-                <View style={[styles.item,styles.itemSmall]}>
+                <View style={[styles().item,styles().itemSmall]}>
                   <Icon name={this.state.selected=="$other"?
                       "radiobox-marked":"radiobox-blank"}
-                    style={styles.icon}/>
-                  <TextInput placeholder="Other" style={{flex:1}} 
-                    value={this.state.selected}
+                    style={styles().icon}/>
+                  <TextInput placeholder="Other"
+                    style={[styles().txt,{flex:1}]} 
+                    value={this.state.selected=="$other"?
+                      "":this.state.selected}
                     onFocus={()=>this.setState({selected:"$other"})}
                     onChangeText={txt=>this.setState({other:txt})}/>
                 </View>
               </ScrollView>
               <View
-                style={modStyles.modFoot}>
+                style={styles().modFoot}>
                 <TouchableNativeFeedback 
                   onPress={()=>this.setState({open:false})}>
-                  <Text style={modStyles.modButt}>
+                  <Text style={styles().modButt}>
                     CANCEL
                   </Text>
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback 
                   onPress={this.sendData.bind(this)}>
-                  <Text style={modStyles.modButt}>
+                  <Text style={styles().modButt}>
                     OK
                   </Text>
                 </TouchableNativeFeedback>
@@ -79,34 +96,3 @@ export default class ModalSelector extends React.Component{
   }
 
 }
-
-const modStyles = StyleSheet.create({
-  modButt:{
-    padding:10,
-    color:"blue",
-    fontWeight:"bold",
-    paddingBottom:7,
-  },
-  modCont:{
-    margin:30,
-    backgroundColor:"white",
-    padding:7,
-  },
-  modHead:{
-    borderBottomWidth:1,
-    padding:7,
-    borderBottomColor:"lightgray",
-    marginBottom:5,
-  },
-  modFoot:{
-    flexDirection:"row",
-    justifyContent:"flex-end",
-    borderTopWidth:1,
-    borderTopColor:"lightgray"
-  },
-  modBack:{
-    backgroundColor:"rgba(0,0,0,.7)",
-    flex:1,
-    justifyContent:"center",
-  },
-});

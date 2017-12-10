@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert,
+import { Text, View, Alert,
         AsyncStorage, Button} from 'react-native';
-import {StackNavigator,} from 'react-navigation';
+import {TabNavigator} from 'react-navigation';
 import styles from './StyleSheet.js';
 import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import RecipeStack from './RecipeStack';
 import ModalSelector from './ModalSelector';
+import ColorSets from './ColorSets';
 
 class Main extends React.Component{
   constructor(props){
@@ -23,13 +24,32 @@ class Main extends React.Component{
 
   render(){
     const {navigate} = this.props.navigation;
-    return <View style={{flex:1}}>
+    return <View style={[styles().cont,{padding:0}]}>
+              <View style={styles().button}/>
               <Button title="Shopping List" 
                 onPress={()=>navigate("List")}/>
               <Button title="Suggested Recipes"
                 color="chocolate"
                 onPress={()=>navigate("Recipes")}/>
-              <Button title="Clear All" 
+              <Button title="Theme 1"
+                color="black"
+                onPress={()=>ColorSets.setTheme(0)}/>
+              <Button title="Theme 2"
+                color="darkred"
+                onPress={()=>ColorSets.setTheme(1)}/>
+              <Button title="Theme 3"
+                color="indigo"
+                onPress={()=>ColorSets.setTheme(2)}/>
+              <Button title="Theme 4"
+                color="goldenrod"
+                onPress={()=>ColorSets.setTheme(3)}/>
+              <Button title="Theme 5"
+                color="palegreen"
+                onPress={()=>ColorSets.setTheme(4)}/>
+              <Button title="Theme 6"
+                color="teal"
+                onPress={()=>ColorSets.setTheme(5)}/>
+              <Button title="Clear All Data" 
                 color="red"
                 onPress={()=>
                 Alert.alert(
@@ -45,41 +65,44 @@ class Main extends React.Component{
 
 }
 
-const Nav = StackNavigator({
+const NavF = ()=>TabNavigator({
   Main: {
     screen: Main,
-    navigationOptions:({navigation})=> ({ 
-      headerTitle: "Alfred foo",
-      headerStyle: styles.bar,
+    navigationOptions:({navigation})=>({
     }),
   },
   List: {
     screen: List,
-    navigationOptions:({navigation})=> ({ 
-      headerTitle: "Shopping List",
-      headerStyle: styles.bar,
-    }),
   },
   Recipes: {
     screen: RecipeStack,
-    navigationOptions:({navigation})=> ({ 
-      headerTitle: "Suggested Recipes",
-      headerStyle: styles.bar,
-    }),
   },
-});
+},({
+  tabBarPosition: 'bottom',
+  tabBarOptions:({ 
+    style: [styles().bar,{paddingTop:2,height:60}],
+    labelStyle: [styles().icon,{fontSize:undefined}],
+    indicatorStyle:styles().line,
+  }),
+}));
 
 export default class App extends React.Component {
 
   constructor(props){
     super(props);
+    this.state={loaded:false};
+  }
+
+  /*
+   * This is to ensure the color has been loaded (cannot wait for it from
+   * here so I put a conservative delay)
+   */
+  componentDidMount(){
+    setTimeout(()=>this.setState({loaded:true}),100);
   }
 
   render(){
-    return <Nav />;
-  }
-
-  componentWillUnmount(){
-    console.log("I'm done");
+    let Nav = NavF(); //redo at each render
+    return this.state.loaded?<Nav />:<Text>Loading..</Text>;
   }
 }

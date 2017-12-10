@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView,
-        TextInput, TouchableNativeFeedback } from 'react-native';
+import { Text, View, Alert, ScrollView,
+        TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './StyleSheet.js';
 
@@ -52,7 +52,7 @@ export default class SuggList extends React.Component{
    * passing also if the element was in the fridge
    */
   render(){
-    return <View style={styles.cont}>
+    return <View style={styles().cont}>
     <ScrollView>
       {Object.keys(this.props.data)
         .filter(e=>(new Date()-this.props.data[e].lastDate)>
@@ -60,13 +60,13 @@ export default class SuggList extends React.Component{
         .filter(e=>(!this.state.data[e]))
         .filter(e=>(this.props.data[e].position=="none" || 
           this.props.data[e].position=="fridge"))
-        .map(e=>(<View style={styles.item} key={e}>
+        .map(e=>(<View style={styles().item} key={e}>
           <TouchableNativeFeedback
             onPress={()=>this.addElement(e,
               this.props.data[e].position=="fridge")}>
             <View style={{flexDirection:"row"}}>
-              <Icon name="add-shopping-cart" style={styles.icon}/>
-              <Text>{e}</Text>
+              <Icon name="add-shopping-cart" style={styles().icon}/>
+              <Text style={styles().txt}>{e}</Text>
             </View>
           </TouchableNativeFeedback></View>))}
       </ScrollView>

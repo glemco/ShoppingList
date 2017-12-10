@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView, Image,
+import { Text, View, Alert, ScrollView, Image,
         AsyncStorage, TouchableNativeFeedback, 
         ActivityIndicator,} from 'react-native';
 import Utils from './Utils.js';
@@ -164,26 +164,28 @@ export default class RecipeSugg extends React.Component {
    * while all the groups will have loaded
    */
   render(){
-    return <ScrollView style={styles.cont}>
+    return <ScrollView style={styles().cont}>
         {Object.keys(this.state.data).map((e,i)=>
           <TouchableNativeFeedback key={i}
             onPress={()=>this.props
               .navigation.navigate("Recipe",{data:this.state.data[e],
                 fridge:this.fridge})}>
-            <View style={[styles.item,styles.itemBig]}>
+            <View style={[styles().item,styles().itemBig]}>
               <Image source={{uri:this.state.data[e].img}} 
-                style={styles.imgSmall} />
+                style={styles().imgSmall} />
               <View style={{flex:1,justifyContent:"space-around",}}>
-                <Text>{this.state.data[e].title}</Text>
-                <Text style={styles.caption}>
+                <Text style={styles().txt}>
+                  {this.state.data[e].title}
+                </Text>
+                <Text style={styles().caption}>
                   {this.state.data[e].ings}</Text>
               </View>
             </View>
           </TouchableNativeFeedback>)
-          .concat(this.state.loaded?<Text key="load"/>:
-            <View key="load" style={styles.item}>
+          .concat(this.state.loaded?<View key="load"/>:
+            <View key="load" style={styles().item}>
               <ActivityIndicator style={{paddingRight:10}}/>
-              <Text style={styles.caption}>{this.state.loadLog}</Text>
+              <Text style={styles().caption}>{this.state.loadLog}</Text>
             </View>)}
       </ScrollView>;
   }

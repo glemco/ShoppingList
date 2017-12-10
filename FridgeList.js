@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView,
-        AsyncStorage, Button, AppState,} from 'react-native';
+import { Text, View, Alert, ScrollView,
+        AsyncStorage, AppState,} from 'react-native';
 import DeletableItem from './DeletableItem';
 import styles from './StyleSheet.js';
 
@@ -114,7 +114,7 @@ export default class FridgeList extends React.Component {
    * All elements are rendered with properties and methods
    */
   render(){
-    return <View style={styles.cont}>
+    return <View style={styles().cont}>
       <ScrollView>
         {Object.keys(this.state.data)
           .map((item) => (<DeletableItem 

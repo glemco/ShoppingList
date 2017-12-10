@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert,
-        TouchableNativeFeedback} from 'react-native';
+import { Text, View, TextInput, 
+  TouchableNativeFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './StyleSheet.js';
 
@@ -72,41 +72,41 @@ export default class EditableItem extends React.Component{
    */
   render(){
     return this.state.edit ? (
-        <View style={styles.item}>
+        <View style={styles().item}>
           <TextInput
             value={this.state.tmp}
             placeholder="Add new item"
             onChangeText={val=>this.setState({tmp:val})}
             autoFocus={true}
-            style={{flex:1}}
+            style={[styles().txt,{flex:1}]}
           />
           {this.state.tmp.length ? //can't submit empty
           (<TouchableNativeFeedback
             onPress={this.sendChange.bind(this)}>
-            <Icon name="done" style={styles.icon}/>
+            <Icon name="done" style={styles().icon}/>
           </TouchableNativeFeedback>):null}
           {this.state.text.length ? //can't delete new one
           (<TouchableNativeFeedback
             onPress={this.delChange.bind(this)}>
-            <Icon name="remove-shopping-cart" style={styles.icon}/>
+            <Icon name="remove-shopping-cart" style={styles().icon}/>
           </TouchableNativeFeedback>):null}
         </View> 
       ) : (
-        <View style={styles.item}>
+        <TouchableNativeFeedback 
+          onPress={this.editThis.bind(this)}>
+          <View style={styles().item}>
           {this.state.text.length ? //can't delete new one
             (<TouchableNativeFeedback
               onPress={this.doneChange.bind(this)}>
-              <Icon name="add-circle-outline" style={styles.icon}/>
+              <Icon name="add-circle-outline" style={styles().icon}/>
             </TouchableNativeFeedback>):null}
-          <TouchableNativeFeedback 
-            onPress={this.editThis.bind(this)}>
             <View style={{flex:1}}>
-              <Text>
+              <Text style={styles().txt}>
                 {this.state.text?this.state.text:"Add new item"}
               </Text>
             </View>
-          </TouchableNativeFeedback> 
-        </View>
+          </View>
+        </TouchableNativeFeedback> 
       );
   }
 }

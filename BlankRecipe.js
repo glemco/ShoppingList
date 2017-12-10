@@ -59,6 +59,9 @@ export default class BlankRecipe extends React.Component{
       directions:directions});
   }
 
+  /*
+   * Storing changes to shopping list from ingredients at once
+   */
   async storeData(){
     const ITEM = 'toBuy';
     const ITEM2 = 'mainList';
@@ -101,6 +104,12 @@ export default class BlankRecipe extends React.Component{
     });
   }
 
+  /*
+   * Open modal selector and send data to it, since ingredients are not
+   * single items but more complicated stuff, split the line into words,
+   * try to exclude what is not an ingredient and ask the user what they 
+   * actually want to add
+   */
   openModal(label){
     var tmp=label.split(" ").filter(e=>!e.match(/[0-9()]/))
       .filter(e=>!e.match(/\bcup(s)?\b/))
@@ -119,6 +128,9 @@ export default class BlankRecipe extends React.Component{
     this.setState({openModal:true,ingSplit:tmp});
   }
 
+  /*
+   * Called by the modal, just stores the selected value
+   */
   toSend(value){
     if(this.props.navigation.state.params.fridge[value]){
       Alert.alert("","Item "+value+" is already in the fridge",
@@ -140,30 +152,31 @@ export default class BlankRecipe extends React.Component{
         <ModalSelector isVisible={this.state.openModal}
           items={this.state.ingSplit}
           onSubmit={this.toSend.bind(this)}/>
-        <View style={styles.cont}>
+        <View style={styles().cont}>
           <TouchableWithoutFeedback
             onPress={this.imgUp.bind(this)}>
-          <View style={styles.imgCont}>
+          <View style={styles().imgCont}>
             <Image source={{uri:this.state.images[this.state.imgNum]}} 
-              style={styles.imgBig}/>
-            <Text style={styles.caption}>
+              style={styles().imgBig}/>
+            <Text style={styles().caption}>
               Tap on the picture to see the next in the gallery
             </Text>
           </View>
           </TouchableWithoutFeedback>
-          <Text style={styles.title}>Ingredients</Text>
+          <Text style={styles().title}>Ingredients</Text>
           {this.state.ingredients.map((e,i)=>
-          <View key={"ing"+i} style={[styles.item,styles.itemSmall]}>
-            <TouchableNativeFeedback onPress={()=>this.openModal(e)}>
-              <Text style={styles.li}>&#8900; {e}</Text>
-            </TouchableNativeFeedback>
-          </View>)}
-          <Text style={styles.caption}>
+          <TouchableNativeFeedback key={"ing"+i} 
+            onPress={()=>this.openModal(e)}>
+            <View style={[styles().item,styles().itemSmall]}>
+              <Text style={styles().li}>&#8900; {e}</Text>
+            </View>
+          </TouchableNativeFeedback>)}
+          <Text style={styles().caption}>
             Tap on an ingredient to add it to the shopping list
           </Text>
-          <Text style={styles.title}>Directions</Text>
+          <Text style={styles().title}>Directions</Text>
           {this.state.directions.map((e,i)=>
-          <Text key={"dir"+i} style={styles.li}>{e}</Text>)}
+          <Text key={"dir"+i} style={styles().li}>{e}</Text>)}
         </View>
       </ScrollView>:
       <View style={{justifyContent:"center",flex:1}}>
