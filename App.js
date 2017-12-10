@@ -65,6 +65,9 @@ class Main extends React.Component{
 
 }
 
+/*
+ * In this way the navigator is created every time (with updated data)
+ */
 const NavF = ()=>TabNavigator({
   Main: {
     screen: Main,
@@ -103,6 +106,6 @@ export default class App extends React.Component {
 
   render(){
     let Nav = NavF(); //redo at each render
-    return this.state.loaded?<Nav />:<Text>Loading..</Text>;
+    return this.state.loaded?<Nav/>:<View/>
   }
 }

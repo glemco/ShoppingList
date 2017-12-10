@@ -101,6 +101,7 @@ const Nav = StackNavigator({
       headerStyle: styles().bar,
       headerTitleStyle: styles().barText,
       headerRight: ShopList.navigationOptions().headerRight,
+      headerTintColor: StyleSheet.flatten(styles().title).color,
     }),
   },
   Fridge: {
@@ -150,6 +151,9 @@ export default class List extends React.Component {
     this.fetchData().done();
   }
 
+  /*
+   * See ShopList
+   */
   componentWillMount(){
     AppState.addEventListener('change', state => {
       if(state!="active")

@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Text, View,} from 'react-native'; //not needed here
+import { StyleSheet, } from 'react-native';
 import {StackNavigator,} from 'react-navigation';
 import styles from './StyleSheet.js';
 import RecipeSugg from './RecipeSugg';
@@ -16,6 +16,7 @@ const Nav = StackNavigator({
       headerTitle: "Suggested Recipes",
       headerStyle: styles().bar,
       headerTitleStyle: styles().barText,
+      headerTintColor: StyleSheet.flatten(styles().title).color,
     }),
   },
   Recipe: {
@@ -23,6 +24,7 @@ const Nav = StackNavigator({
     navigationOptions:({navigation})=> ({ 
       headerStyle: styles().bar,
       headerTitleStyle: styles().barText,
+      headerTintColor: StyleSheet.flatten(styles().title).color,
     }),
   },
 });

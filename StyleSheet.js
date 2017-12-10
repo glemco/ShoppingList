@@ -35,6 +35,7 @@ export default ()=>{let colors = ColorSets.getStylesheet();
   caption:{
     textAlign:"right",
     color:"lightslategrey",
+    fontStyle:"italic",
   },
   txt:{
     color:colors.text,
