@@ -17,6 +17,7 @@ const Nav = StackNavigator({
       headerStyle: styles().bar,
       headerTitleStyle: styles().barText,
       headerTintColor: StyleSheet.flatten(styles().title).color,
+      headerRight: RecipeSugg.navigationOptions().headerRight,
     }),
   },
   Recipe: {

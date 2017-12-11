@@ -22,6 +22,17 @@ class Main extends React.Component{
     AsyncStorage.removeItem("fridge");
   }
 
+  changeTheme(num){
+    ColorSets.setTheme(num);
+    this.setState({theme:num});
+    Alert.alert(
+      "","Changes will be complete after having restarted the app",
+      [
+        {text: 'Ok', onPress:()=>null},
+      ],
+    )
+  }
+
   render(){
     const {navigate} = this.props.navigation;
     return <View style={[styles().cont,{padding:0}]}>
@@ -33,22 +44,22 @@ class Main extends React.Component{
                 onPress={()=>navigate("Recipes")}/>
               <Button title="Theme 1"
                 color="black"
-                onPress={()=>ColorSets.setTheme(0)}/>
+                onPress={()=>this.changeTheme(0)}/>
               <Button title="Theme 2"
                 color="darkred"
-                onPress={()=>ColorSets.setTheme(1)}/>
+                onPress={()=>this.changeTheme(1)}/>
               <Button title="Theme 3"
                 color="indigo"
-                onPress={()=>ColorSets.setTheme(2)}/>
+                onPress={()=>this.changeTheme(2)}/>
               <Button title="Theme 4"
                 color="goldenrod"
-                onPress={()=>ColorSets.setTheme(3)}/>
+                onPress={()=>this.changeTheme(3)}/>
               <Button title="Theme 5"
                 color="palegreen"
-                onPress={()=>ColorSets.setTheme(4)}/>
+                onPress={()=>this.changeTheme(4)}/>
               <Button title="Theme 6"
                 color="teal"
-                onPress={()=>ColorSets.setTheme(5)}/>
+                onPress={()=>this.changeTheme(5)}/>
               <Button title="Clear All Data" 
                 color="red"
                 onPress={()=>

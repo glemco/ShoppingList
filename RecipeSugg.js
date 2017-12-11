@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, View, Alert, ScrollView, Image,
+import { Text, View, Alert, ScrollView, Image, RefreshControl,
         AsyncStorage, TouchableNativeFeedback, 
         ActivityIndicator,} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Utils from './Utils.js';
 import styles from './StyleSheet.js';
 
@@ -28,7 +29,22 @@ export default class RecipeSugg extends React.Component {
     this.isOver=[false,false,false]; //singlets,couples and triplets
     this.state={data:[],loaded:false};
     this.fetchData();
+    RecipeSugg.reload=this.doReload.bind(this);
   }
+
+  /*
+   * Define the header button to reload
+   */
+  static navigationOptions(){
+    return {
+      headerRight:(<TouchableNativeFeedback
+            style={{fontSize:100}}
+            onPress={()=>RecipeSugg.reload()}>
+            <Icon name="refresh" style={[styles().icon,{fontSize:30}]}/>
+          </TouchableNativeFeedback>),
+    };
+  }
+
 
   /*
    * Function to enumerate all couples out of an array, the result is 
@@ -154,6 +170,13 @@ export default class RecipeSugg extends React.Component {
     this.triplets=RecipeSugg.makeTriplets(arr);
   }
 
+  doReload(){
+    console.log("reloading content");
+    this.setState({loaded:false,data:[]});
+    this.isOver=[false,false,false];
+    this.fetchData();
+  }
+
   /*
    * Render all the elements as TouchableNativeFeedback components 
    * containing the image, the title and the ingredients that made the 
@@ -164,7 +187,12 @@ export default class RecipeSugg extends React.Component {
    * while all the groups will have loaded
    */
   render(){
-    return <ScrollView style={styles().cont}>
+    return <View style={styles().cont}>
+        <ScrollView
+          refreshControl = {<RefreshControl 
+            refreshing={!this.state.loaded} 
+            onRefresh={this.doReload.bind(this)}/>}>
+           
         {Object.keys(this.state.data).map((e,i)=>
           <TouchableNativeFeedback key={i}
             onPress={()=>this.props
@@ -187,7 +215,8 @@ export default class RecipeSugg extends React.Component {
               <ActivityIndicator style={{paddingRight:10}}/>
               <Text style={styles().caption}>{this.state.loadLog}</Text>
             </View>)}
-      </ScrollView>;
+        </ScrollView>
+      </View>;
   }
 
 }
