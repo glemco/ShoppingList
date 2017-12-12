@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, ActivityIndicator, AsyncStorage,
   TouchableNativeFeedback, AppState, Alert,
   ScrollView, Image, TouchableWithoutFeedback, } from 'react-native';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 import Utils from './Utils.js';
 import ModalSelector from './ModalSelector';
 

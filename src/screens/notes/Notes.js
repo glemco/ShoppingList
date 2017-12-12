@@ -1,25 +1,10 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet  } from 'react-native';
-
-import firebase from '../../service/Database';
+import { ScrollView, StyleSheet, View, ActivityIndicator } from 'react-native';
+import Styles from '../../styles/StyleSheet';
 
 import NotesCategorie from './NotesCategorie';
 
 export default class Notes extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            notes: [],
-            categories: [],
-        }
-    }
-
-    componentDidMount() {
-        firebase.database().ref().on('value', data => {
-            this.setState(data.val());
-        });
-    }
 
     editNote(note) {
         this.props.navigation.navigate('Edit', { 
@@ -30,17 +15,20 @@ export default class Notes extends Component {
     }
 
     saveNoteEdit(note) {
-        this.setState(state => {
-            state.notes[note.id] = note;
-            return state;
-        });
+        let { notes } = this.props.screenProps;
+
+        notes[note.id] = note;
+
+        this.props.screenProps.setState({notes: notes});
     }
 
     deleteNoteEdit(noteId) {
-        this.setState(state => {
-            state.notes.splice(noteId, 1);
-            return state;
-        });
+        let { notes } = this.props.screenProps;
+        
+        notes.splice(noteId, 1);
+        this.updateNotesIds(notes);
+
+        this.props.screenProps.setState({notes: notes});
     }
 
     addNote(categorieId) {
@@ -50,32 +38,41 @@ export default class Notes extends Component {
     }
 
     saveNoteAdd(note, categorieId) {
+        let { notes } = this.props.screenProps;
+        
         note.categorieId = categorieId;
-        this.setState(state => {
-            state.notes.push(note);
-            return state;
-        });
+        notes.push(note);
+        this.updateNotesIds(notes);
+
+        this.props.screenProps.setState({ notes: notes });
     }
 
-    putNotesWithId() {
-        this.state.notes.forEach((note, noteId) => {
-            note.id = noteId;
-            return note;
-        });
+    updateNotesIds(notes) {
+        // put the ids
+        notes.forEach((note, noteId) => (
+            note.id = noteId
+        ));
     }
 
     render() {
-        this.putNotesWithId();
+        if (this.props.screenProps.isLoading) {
+            return (
+                <View style={[Styles().cont, { flex: 1, justifyContent: 'center' }]}>
+                    <ActivityIndicator size="large" color={StyleSheet.flatten(Styles().title).color} />
+                </View>
+            )
+        }
 
+        let { notes, categories } = this.props.screenProps;
         return (
-            <ScrollView style={styles.container}>
-                {this.state.categories.map((categorie, categorieId) => (
+            <ScrollView style={Styles().cont}>
+                {categories.map((categorie, categorieId) => (
                     <NotesCategorie
                         key={categorieId}
                         title={categorie}
                         editNote={(note) => this.editNote(note)}
                         addNote={() => this.addNote(categorieId)}
-                        notes={this.state.notes.filter(note => (
+                        notes={notes.filter(note => (
                             note.categorieId == categorieId
                         ))}
                     />
@@ -84,10 +81,3 @@ export default class Notes extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'black',
-    }
-});
-

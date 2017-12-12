@@ -4,7 +4,7 @@ import { Text, View, Modal, TextInput,
   TouchableNativeFeedback, StyleSheet,
   ScrollView, TouchableWithoutFeedback, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 
 export default class ModalSelector extends React.Component{
   constructor(props){

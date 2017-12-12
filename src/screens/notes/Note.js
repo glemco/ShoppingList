@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
+import Styles from '../../styles/StyleSheet';
 
 export default class Note extends Component {
     
     getDate(date) {
         date = new Date(date);
         const now = new Date();
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Fri', 'Sat', 'Sun'];
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         if (now.getFullYear() == date.getFullYear()) {
@@ -37,12 +38,12 @@ export default class Note extends Component {
             <TouchableHighlight 
                 onPress={() => this.props.editNote(note) }
             >
-                <View style={styles.container}>
+                <View style={[styles.container, Styles().mainColorBg]}>
                     <View style={styles.row}>
-                        <Text style={styles.title}>{note.title}</Text>
-                        <Text style={styles.date}>{this.getDate(note.date)}</Text>
+                        <Text style={[Styles().txt, styles.title]}>{note.title}</Text>
+                        <Text style={[Styles().txt, styles.date]}>{this.getDate(note.date)}</Text>
                     </View>
-                    <Text style={styles.content}>{note.content}</Text>
+                    <Text style={[Styles().txt, styles.content]}>{note.content}</Text>
                 </View>
             </TouchableHighlight>
         );

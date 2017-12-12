@@ -4,7 +4,7 @@ import { Text, View, Alert, ScrollView, Image, RefreshControl,
         ActivityIndicator,} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Utils from './Utils.js';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 
 const BASE="http://allrecipes.com";
 const RECIPES=BASE+"/search/results/?ingIncl="; //to query the website

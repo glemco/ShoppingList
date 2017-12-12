@@ -3,7 +3,7 @@ import { Text, View, Alert, ScrollView,
         TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { MaterialIcons } from '@expo/vector-icons';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 
 /*
  * This list takes from the main one what Alfred thinks may be a useful

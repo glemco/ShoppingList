@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, } from 'react-native';
 import {StackNavigator,} from 'react-navigation';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 import RecipeSugg from './RecipeSugg';
 import BlankRecipe from './BlankRecipe';
 

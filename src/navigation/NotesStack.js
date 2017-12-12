@@ -1,6 +1,7 @@
 import React from 'react';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, StyleSheet, } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import Styles from '../styles/StyleSheet';
 
 import Notes from '../screens/notes/Notes';
 import Add from '../screens/notes/Add';
@@ -28,9 +29,9 @@ export default NotesStack = StackNavigator({
     },
 }, {
     navigationOptions: {
-        headerTintColor: 'white',
+        headerTintColor: StyleSheet.flatten(Styles().title).color,
         headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: StyleSheet.flatten(Styles().bar).backgroundColor,
             paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
         }
     }

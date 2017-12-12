@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, TextInput, 
   TouchableNativeFeedback} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 
 /*
  * Component used in the ShopList

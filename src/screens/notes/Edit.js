@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { View, StyleSheet, Text, TouchableNativeFeedback,
+        Button, TextInput } from 'react-native';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import Styles from '../../styles/StyleSheet';
 
 export default class Edit extends Component {
 
@@ -28,23 +30,47 @@ export default class Edit extends Component {
         super(props);
         this.state = {
             note: this.props.navigation.state.params.note,
+            isDateTimePickerVisible: false
         }
+    }
+
+    _handleDatePicked(date) {
+        this.setState(state => {
+            state.note.date = date.toISOString().substring(0, 10);
+            state.isDateTimePickerVisible = false;
+            return state;
+        });
     }
     
     render() {
         const note = this.state.note;
         return (
-            <View style={styles.container}>
+            <View style={Styles().cont}>
                 <TextInput
-                    style={styles.title}
+                    style={[Styles().title, styles.title]}
                     onChangeText={(text) => this.setState(state => {
                         state.note.title = text;
                         return state;
                     })}
                     value={note.title}
                 />
+                <TouchableNativeFeedback
+                    color={StyleSheet.flatten(Styles().title).color}
+                    onPress={() => this.setState({ isDateTimePickerVisible: true })}>
+                  <View style={Styles().button}>
+                    <Text style={Styles().label}>
+                      {note.date.toString()}
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+                <DateTimePicker
+                    date={new Date(note.date)}
+                    isVisible={this.state.isDateTimePickerVisible}
+                    onConfirm={(date) => this._handleDatePicked(date)}
+                    onCancel={() => this.setState({ isDateTimePickerVisible: false })}
+                />
                 <TextInput
-                    style={styles.content}
+                    style={Styles().txt}
                     multiline={true}
                     autoGrow={true}
                     onChangeText={(text) => this.setState(state => {
@@ -53,12 +79,15 @@ export default class Edit extends Component {
                     })}
                     value={note.content}
                 />
-                <Button
-                    title="Save modifications"
-                    color="black"
-                    onPress={() => this.saveNoteEdit(note)}
-                />
-                <View style={styles.space}></View>
+                <TouchableNativeFeedback
+                    onPress={() => this.saveNoteEdit(note)}>
+                  <View style={Styles().button}>
+                    <Text style={Styles().label}>
+                      Save modifications
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+                <View style={{ flex: 1 }}></View>
                 <Button
                     title="Delete note"
                     color="red"
@@ -72,22 +101,13 @@ export default class Edit extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        backgroundColor: 'black',
     },
     title: {
-        color: 'white',
         padding: 5,
-        color: 'yellow',
         fontSize: 40,
     },
     content: {
-        color: 'white',
         padding: 5,
-        color: 'yellow',
-    },
-    space: {
-        flex: 1,
     }
 });
 

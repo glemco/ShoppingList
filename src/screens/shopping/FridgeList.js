@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Alert, ScrollView,
         AsyncStorage, AppState,} from 'react-native';
 import DeletableItem from './DeletableItem';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 
 /*
  * Here is the fridge page, it retrieves the content of the fridge, 

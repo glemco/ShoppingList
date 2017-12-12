@@ -2,11 +2,10 @@ import React from 'react';
 import { Text, View, ScrollView, StyleSheet,
         AsyncStorage, AppState,} from 'react-native';
 import {StackNavigator,} from 'react-navigation';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import SuggList from './SuggList';
-import ColorSets from './ColorSets';
 
 /*
  * data is a local attribute accessible through some static functions

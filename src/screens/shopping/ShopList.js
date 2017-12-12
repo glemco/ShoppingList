@@ -4,7 +4,7 @@ import { Text, View, Alert, TouchableWithoutFeedback,
         TouchableNativeFeedback, AppState, RefreshControl,
         ScrollView, Keyboard} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 import EditableItem from './EditableItem';
 
 /*

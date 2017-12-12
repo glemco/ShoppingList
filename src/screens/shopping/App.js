@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Alert,
         AsyncStorage, Button} from 'react-native';
 import {TabNavigator} from 'react-navigation';
-import styles from './StyleSheet.js';
+import styles from './../../styles/StyleSheet.js';
 import List from './List';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
