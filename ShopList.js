@@ -3,7 +3,7 @@ import { Text, View, Alert, TouchableWithoutFeedback,
         AsyncStorage, Button, Animated, Dimensions,
         TouchableNativeFeedback, AppState,
         ScrollView, Keyboard} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
 import EditableItem from './EditableItem';
 
@@ -99,7 +99,7 @@ export default class ShopList extends React.Component {
       headerRight:(<TouchableNativeFeedback
             style={{fontSize:100}}
             onPress={()=>ShopList.navigate("Fridge")}>
-            <Icon name="fridge" style={[styles().icon,{fontSize:30}]}/>
+            <MaterialCommunityIcons name="fridge" style={[styles().icon,{fontSize:30}]}/>
           </TouchableNativeFeedback>),
     };
   }

@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View, Modal, TextInput, 
   TouchableNativeFeedback, StyleSheet,
   ScrollView, TouchableWithoutFeedback, } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
 
 export default class ModalSelector extends React.Component{
@@ -55,14 +55,14 @@ export default class ModalSelector extends React.Component{
                 <TouchableNativeFeedback key={i}
                   onPress={()=>this.setState({selected:e})}>
                   <View style={[styles().item,styles().itemSmall]}>
-                    <Icon name={this.state.selected==e?
+                    <MaterialIcons name={this.state.selected==e?
                         "radiobox-marked":"radiobox-blank"}
                       style={styles().icon}/>
                     <Text style={styles().txt}>{e}</Text>
                   </View>
                 </TouchableNativeFeedback>)}
                 <View style={[styles().item,styles().itemSmall]}>
-                  <Icon name={this.state.selected=="$other"?
+                  <MaterialIcons name={this.state.selected=="$other"?
                       "radiobox-marked":"radiobox-blank"}
                     style={styles().icon}/>
                   <TextInput placeholder="Other"

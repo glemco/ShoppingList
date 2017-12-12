@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, Alert, ScrollView,
         TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
 
 /*

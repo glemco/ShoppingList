@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableNativeFeedback} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
 
 /*
@@ -29,7 +29,7 @@ export default class DeletableItem extends React.Component{
           <Text style={[styles().txt,{flex:1}]}>{this.state.text}</Text>
           <TouchableNativeFeedback
             onPress={this.delChange.bind(this)}>
-            <Icon name="delete-sweep" style={styles().icon}/>
+            <MaterialIcons name="delete-sweep" style={styles().icon}/>
           </TouchableNativeFeedback>
         </View>);
   }

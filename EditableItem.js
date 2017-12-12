@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TextInput, 
   TouchableNativeFeedback} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
 
 /*
@@ -84,12 +84,12 @@ export default class EditableItem extends React.Component{
           {this.state.tmp.length ? //can't submit empty
           (<TouchableNativeFeedback
             onPress={this.sendChange.bind(this)}>
-            <Icon name="done" style={styles().icon}/>
+            <MaterialIcons name="done" style={styles().icon}/>
           </TouchableNativeFeedback>):null}
           {this.state.text.length ? //can't delete new one
           (<TouchableNativeFeedback
             onPress={this.delChange.bind(this)}>
-            <Icon name="remove-shopping-cart" style={styles().icon}/>
+            <MaterialIcons name="remove-shopping-cart" style={styles().icon}/>
           </TouchableNativeFeedback>):null}
         </View> 
       ) : (
@@ -99,7 +99,7 @@ export default class EditableItem extends React.Component{
           {this.state.text.length ? //can't delete new one
             (<TouchableNativeFeedback
               onPress={this.doneChange.bind(this)}>
-              <Icon name="add-circle-outline" style={styles().icon}/>
+              <MaterialIcons name="add-circle-outline" style={styles().icon}/>
             </TouchableNativeFeedback>):null}
             <View style={{flex:1}}>
               <Text style={styles().txt}>
