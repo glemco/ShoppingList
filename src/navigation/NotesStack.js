@@ -28,11 +28,11 @@ export default NotesStack = StackNavigator({
         }
     },
 }, {
-    navigationOptions: {
+    navigationOptions: ()=>({
         headerTintColor: StyleSheet.flatten(Styles().title).color,
         headerStyle: {
             backgroundColor: StyleSheet.flatten(Styles().bar).backgroundColor,
             paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
         }
-    }
+    })
 });
