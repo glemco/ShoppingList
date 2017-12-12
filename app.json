@@ -1,0 +1,24 @@
+{
+    "expo": {
+        "name": "alfred",
+        "description": "An empty new project",
+        "slug": "alfred",
+        "privacy": "public",
+        "sdkVersion": "21.0.0",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "primaryColor": "#000000",
+        "icon": "./assets/icons/app-icon.png",
+        "loading": {
+            "icon": "./assets/icons/loading-icon.png",
+            "backgroundColor": "#000000"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.chardonnay.alfred"
+        },
+        "android": {
+            "package": "com.chardonnay.alfred"
+        }
+    }
+}
