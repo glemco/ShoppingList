@@ -3,7 +3,6 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 
 import Home from '../screens/home/Home';
-import Assistant from '../screens/assistant/Assistant';
 import NotesStack from './NotesStack';
 import List from '../screens/shopping/List';
 import RecipeStack from '../screens/shopping/RecipeStack';
@@ -20,7 +19,7 @@ export default NavTabs = TabNavigator({
             )
         }
     },
-    Assistant: {
+    Recipes: {
         screen: RecipeStack,
         navigationOptions: {
             tabBarIcon: ({ tintColor }) => (

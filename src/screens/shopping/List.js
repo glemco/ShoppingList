@@ -114,8 +114,8 @@ export default class List extends React.Component {
   /*
    * As it happens in the shopping list this can both add and 
    * delete, in case of a change the old value is directly deleted and
-   * its data is saved in the new entry if not already there (otherwise the 
-   * default behaviour applies), when an element that was already
+   * its data is saved in the new entry if not already there (otherwise
+   * the default behaviour applies), when an element that was already
    * there is added it's data are updated: the last date is set to the
    * current, the duration (in ms) is computed as an average between 
    * the old duration and the new one (new date-last date), the relative 
@@ -132,7 +132,7 @@ export default class List extends React.Component {
         this.data[newVal].duration = 
           (1-AVG_SET)*this.data[newVal].duration +
           AVG_SET*(new Date()-this.data[newVal].lastDate);
-        this.data[newVal].lastDate = (new Date()).getTime(); //update stats
+        this.data[newVal].lastDate=(new Date()).getTime(); //update stats
       } else {
         if(oldVal.length && oldVal!="$new"){
           this.data[newVal] = this.data[oldVal]; //merge them
@@ -164,6 +164,9 @@ export default class List extends React.Component {
     return this.data[name].position;
   }
 
+  /*
+   * For who needs to access that list
+   */
   getData(){
     return this.data;
   }

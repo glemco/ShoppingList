@@ -22,17 +22,6 @@ class Main extends React.Component{
     AsyncStorage.removeItem("fridge");
   }
 
-  changeTheme(num){
-    ColorSets.setTheme(num);
-    this.setState({theme:num});
-    Alert.alert(
-      "","Changes will be complete after having restarted the app",
-      [
-        {text: 'Ok', onPress:()=>null},
-      ],
-    )
-  }
-
   render(){
     const {navigate} = this.props.navigation;
     return <View style={[styles().cont,{padding:0}]}>
@@ -44,22 +33,22 @@ class Main extends React.Component{
                 onPress={()=>navigate("Recipes")}/>
               <Button title="Theme 1"
                 color="black"
-                onPress={()=>this.changeTheme(0)}/>
+                onPress={()=>App.changeTheme(0)}/>
               <Button title="Theme 2"
                 color="darkred"
-                onPress={()=>this.changeTheme(1)}/>
+                onPress={()=>App.changeTheme(1)}/>
               <Button title="Theme 3"
                 color="indigo"
-                onPress={()=>this.changeTheme(2)}/>
+                onPress={()=>App.changeTheme(2)}/>
               <Button title="Theme 4"
                 color="goldenrod"
-                onPress={()=>this.changeTheme(3)}/>
+                onPress={()=>App.changeTheme(3)}/>
               <Button title="Theme 5"
                 color="palegreen"
-                onPress={()=>this.changeTheme(4)}/>
+                onPress={()=>App.changeTheme(4)}/>
               <Button title="Theme 6"
                 color="teal"
-                onPress={()=>this.changeTheme(5)}/>
+                onPress={()=>App.changeTheme(5)}/>
               <Button title="Clear All Data" 
                 color="red"
                 onPress={()=>
@@ -105,6 +94,7 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state={loaded:false};
+    App.changeTheme = this.changeTheme.bind(this);
   }
 
   /*
@@ -115,6 +105,24 @@ export default class App extends React.Component {
     setTimeout(()=>this.setState({loaded:true}),100);
   }
 
+  /*
+   * This will reload the whole app to change the theme
+   */
+  changeTheme(num){
+    ColorSets.setTheme(num);
+    this.setState({theme:num});
+    //Alert.alert( //it should be ok now
+    //  "","Changes will be complete after having restarted the app",
+    //  [
+    //    {text: 'Ok', onPress:()=>null},
+    //  ],
+    //)
+  }
+
+  /*
+   * The TabNavigator is no more a constant but a function, so that at
+   * each render it's recomputer with the new colors
+   */
   render(){
     let Nav = NavF(); //redo at each render
     return this.state.loaded?<Nav/>:<View/>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Alert, ScrollView, Image, RefreshControl,
         AsyncStorage, TouchableNativeFeedback, 
         ActivityIndicator,} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Utils from './Utils.js';
 import styles from './StyleSheet.js';
 
@@ -40,7 +40,7 @@ export default class RecipeSugg extends React.Component {
       headerRight:(<TouchableNativeFeedback
             style={{fontSize:100}}
             onPress={()=>RecipeSugg.reload()}>
-            <Icon name="refresh" style={[styles().icon,{fontSize:30}]}/>
+            <MaterialIcons name="refresh" style={[styles().icon,{fontSize:30}]}/>
           </TouchableNativeFeedback>),
     };
   }
