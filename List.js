@@ -42,6 +42,7 @@ const Nav = StackNavigator({
                     onChange={List.changeItem}
                     changePos={List.changePos}
                     getPos={List.getPos}
+                    refreshList={List.refreshData}
                     navigation={navigation}
                   />),
     navigationOptions:({navigation})=> ({ 
@@ -93,11 +94,13 @@ export default class List extends React.Component {
   constructor(props){
     super(props);
     this.data={};
+    this.rem={};
     this.saved=true;
     List.changeItem=this.changeItem.bind(this);
     List.changePos=this.changePos.bind(this);
     List.getPos=this.getPos.bind(this);
     List.getData=this.getData.bind(this);
+    List.refreshData=this.refreshData.bind(this);
     this.fetchData().done();
   }
 
@@ -142,8 +145,10 @@ export default class List extends React.Component {
           this.data[newVal] = {name:newVal,duration:0,
             lastDate:(new Date()).getTime(),position:"toBuy"};
       }
-    } else
+    } else {
       delete this.data[oldVal];
+      this.rem[oldVal]={}; //used while refreshing
+    }
   }
 
   /*
@@ -196,7 +201,7 @@ export default class List extends React.Component {
    */
   async storeData(){
     try{
-      if(List.saved)
+      if(this.saved)
         return;
       await AsyncStorage.setItem(ITEM,JSON.stringify(this.data));
     } catch(e){
@@ -215,6 +220,24 @@ export default class List extends React.Component {
   render(){
     return <Nav />;
   }
+
+  /*
+   * Called by pulling down the ShopList, it does exactly the same for
+   * this object (needs static reference)
+   */
+  async refreshData(){
+    var tmp = await AsyncStorage.getItem(ITEM);
+    tmp = tmp?JSON.parse(tmp):{}; 
+    if(tmp!=this.data){ //something changed
+      this.data = Object.assign(tmp,this.data); //merge them
+      Object.keys(this.rem)
+        .forEach(e=>delete this.data[e]); //apply removals
+      this.rem={}; //removals have been saved
+      this.saved=false;
+    }
+    this.storeData();
+  }
+
 
   /*
    * As usual

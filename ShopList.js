@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Alert, TouchableWithoutFeedback,
         AsyncStorage, Button, Animated, Dimensions,
-        TouchableNativeFeedback, AppState,
+        TouchableNativeFeedback, AppState, RefreshControl,
         ScrollView, Keyboard} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from './StyleSheet.js';
@@ -40,6 +40,7 @@ export default class ShopList extends React.Component {
     this.fetchData().done();
     this.keyboardHeight = new Animated.Value(0);
     this.saved=true;
+    this.rem = {};
     ShopList.data2 = {};
     ShopList.rem2 = {};
     ShopList.navigate = this.props.navigation.navigate.bind(this);
@@ -119,6 +120,7 @@ export default class ShopList extends React.Component {
       return;
     this.saved=false; //something has changed
     delete tmp[oldVal];
+    this.rem[oldVal] = {}; //used in the pull-to-refresh
     if(newVal && newVal.length){ //otherwise it's just a deletion
       tmp[newVal] = {name:newVal};
       this.props.onChange(oldVal,newVal);
@@ -250,6 +252,29 @@ export default class ShopList extends React.Component {
   }
 
   /*
+   * Called by pulling down, it's needed when the user made some 
+   * modifications and want to see the results immediately without 
+   * restarting the app. It loads the data from memory, merges with local
+   * object and if there's something to save it does
+   */
+  async refreshData(){
+    var tmp = await AsyncStorage.getItem(ITEM);
+    tmp = tmp?JSON.parse(tmp):{}; //data from storage
+    var locTmp = this.state.data;
+    if(tmp!=this.state.data){ //something changed
+      Object.assign(locTmp,tmp); //merge them
+      Object.assign(this.rem,ShopList.data2); //merge removals
+      Object.keys(this.rem)
+        .forEach(e=>delete locTmp[e]); //apply removals
+      this.rem={}; //removals have been saved
+      this.setState({data:locTmp});
+      this.saved=false;
+    }
+    this.storeData();
+    this.props.refreshList(); //call the same on the main list
+  }
+
+  /*
    * Called by the fridge to retrieve what should be added to its own
    * list, after it the object is set to empty to avoid inserting the 
    * same data over again
@@ -285,7 +310,10 @@ export default class ShopList extends React.Component {
     <TouchableWithoutFeedback style={{flex:1}}
       onPress={this.closeAll.bind(this)}>
       <View style={styles().cont}>
-        <ScrollView keyboardShouldPersistTaps="always">
+        <ScrollView keyboardShouldPersistTaps="always"
+          refreshControl = {<RefreshControl 
+            refreshing={false} 
+            onRefresh={this.refreshData.bind(this)}/>}>
           {Object.keys(this.state.data)
             .map((item) => (<EditableItem 
               key={item+(new Date()).getTime()}
