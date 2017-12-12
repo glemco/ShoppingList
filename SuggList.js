@@ -14,11 +14,11 @@ import styles from './StyleSheet.js';
 export default class SuggList extends React.Component{
 
   /*
-   * data is what will be added to the ShopList
+   * data is what will be added to the ShopList, items are received
    */
   constructor(props){
     super(props);
-    this.state={data:{}};
+    this.state={data:{},items:this.props.data()};
   }
 
   /*
@@ -54,16 +54,16 @@ export default class SuggList extends React.Component{
   render(){
     return <View style={styles().cont}>
     <ScrollView>
-      {Object.keys(this.props.data)
-        .filter(e=>(new Date()-this.props.data[e].lastDate)>
-          this.props.data[e].duration)
+      {Object.keys(this.state.items)
+        .filter(e=>(new Date()-this.state.items[e].lastDate)>
+          this.state.items[e].duration)
         .filter(e=>(!this.state.data[e]))
-        .filter(e=>(this.props.data[e].position=="none" || 
-          this.props.data[e].position=="fridge"))
+        .filter(e=>(this.state.items[e].position=="none" || 
+          this.state.items[e].position=="fridge"))
         .map(e=>(<View style={styles().item} key={e}>
           <TouchableNativeFeedback
             onPress={()=>this.addElement(e,
-              this.props.data[e].position=="fridge")}>
+              this.state.items[e].position=="fridge")}>
             <View style={{flexDirection:"row"}}>
               <Icon name="add-shopping-cart" style={styles().icon}/>
               <Text style={styles().txt}>{e}</Text>

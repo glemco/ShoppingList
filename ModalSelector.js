@@ -67,9 +67,8 @@ export default class ModalSelector extends React.Component{
                     style={styles().icon}/>
                   <TextInput placeholder="Other"
                     style={[styles().txt,{flex:1}]} 
-                    value={this.state.selected=="$other"?
-                      "":this.state.selected}
                     onFocus={()=>this.setState({selected:"$other"})}
+                    autoCapitalize="none"
                     onChangeText={txt=>this.setState({other:txt})}/>
                 </View>
               </ScrollView>

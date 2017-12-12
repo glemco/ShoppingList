@@ -107,10 +107,8 @@ export default class RecipeSugg extends React.Component {
       this.isOver[str.split(",").length-1]=true;
     if(this.isOver[0] && this.isOver[1] && this.isOver[2])
       this.setState({loaded:true});
-    if(resNum<MINLIM){ //not worth match
-      console.log("Dropped "+str);
+    if(resNum<MINLIM) //not worth match
       return null;
-    }
     let results=Array.from(obj.getElementsByTagName("article"))
       .filter(e=>!e.hasAttribute("id") &&
         !e.getAttribute("class").match("video")
@@ -134,11 +132,12 @@ export default class RecipeSugg extends React.Component {
     try{
       var tmp = await AsyncStorage.getItem("fridge");
       this.fridge=tmp?JSON.parse(tmp):{};
+      if(Object.keys(this.fridge).length<1) //nothing at all
+        this.setState({loaded:true}); //will not be computed
       if(Object.keys(this.fridge).length<2) //no couples
         this.isOver[1]=true;
       if(Object.keys(this.fridge).length<3) //no triplets
         this.isOver[2]=true;
-      console.log("Retrieving fridge for recipes");
       Object.keys(this.fridge).forEach((e,i,a)=>
         this.tryMatching(e,i,a.length-1));
       this.makeGroups();
@@ -171,7 +170,6 @@ export default class RecipeSugg extends React.Component {
   }
 
   doReload(){
-    console.log("reloading content");
     this.setState({loaded:false,data:[]});
     this.isOver=[false,false,false];
     this.fetchData();

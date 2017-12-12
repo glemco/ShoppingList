@@ -15,7 +15,6 @@ export default class BlankRecipe extends React.Component{
   constructor(props){
     super(props);
     this.data = this.props.navigation.state.params.data;
-    console.log(this.data.url);
     this.state={ingredients:[],images:[],imgNum:0,directions:[],
       ingSplit:[],openModal:false,};
     this.shopData={};
@@ -67,7 +66,6 @@ export default class BlankRecipe extends React.Component{
     const ITEM2 = 'mainList';
     try{
       if(Object.keys(this.shopData).length){
-        console.log("Saving "+Object.keys(this.shopData));
         var tmp = await AsyncStorage.getItem(ITEM);
         tmp = tmp?JSON.parse(tmp):{};
         var tmp2 = await AsyncStorage.getItem(ITEM2);

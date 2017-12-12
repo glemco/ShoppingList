@@ -17,7 +17,6 @@ const ITEM = 'fridge';
 export default class FridgeList extends React.Component {
 
   constructor(props){
-    //console.log("Fridge start");
     super(props);
     this.state={data:{}};
     this.fetchData().done();
@@ -73,7 +72,6 @@ export default class FridgeList extends React.Component {
           {this.saved=false; tmp[e]={name:e}}); //add items
       Object.keys(this.props.deletions()).forEach(e=>
         {this.saved=false; delete tmp[e]}); //remove them
-      console.log("Retrieving fridge");
       this.setState({data:tmp,focus:true});
     } catch(e){
       Alert.alert(
@@ -95,7 +93,6 @@ export default class FridgeList extends React.Component {
     try{
       if(this.saved)
         return;
-      console.log("Saving FridgeList");
       await AsyncStorage.setItem(ITEM,JSON.stringify(this.state.data));
     } catch(e){
       Alert.alert(
@@ -130,7 +127,6 @@ export default class FridgeList extends React.Component {
    * Saving data to memory while unmounting
    */
   componentWillUnmount(){
-    //console.log("Fridge stop");
     this.storeData().done();
   }
 }

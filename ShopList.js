@@ -173,7 +173,6 @@ export default class ShopList extends React.Component {
   receiveItem(value){ //from the fridge or sugg
     this.saved=false; //something has changed
     let tmp = this.state.data;
-    console.log("Updating shop with "+value);
     tmp[value]={name:value};
     this.props.onChange("",value);
     this.setState({data:tmp});
@@ -200,7 +199,6 @@ export default class ShopList extends React.Component {
       var tmp = await AsyncStorage.getItem(ITEM);
       tmp = tmp?JSON.parse(tmp):{}; 
       this.setState({data:tmp});
-      console.log("Retrieving shopping");
     } catch(e){
       Alert.alert(
         'Error',
@@ -224,7 +222,6 @@ export default class ShopList extends React.Component {
     try{
       if(this.saved)
         return;
-      console.log("Saving Shoplist");
       this.saved=true; //now it's saved
       var tmp = this.state.data;
       const ITEM2 = "fridge";
@@ -259,7 +256,6 @@ export default class ShopList extends React.Component {
    */
   static getData2(){
     let tmp = ShopList.data2;
-    console.log("Adding "+Object.keys(tmp));
     ShopList.data2 = {}; //empty after asked for
     return tmp;
   }
@@ -269,7 +265,6 @@ export default class ShopList extends React.Component {
    */
   static getRem2(){
     let tmp = ShopList.rem2;
-    console.log("Removing "+Object.keys(tmp));
     ShopList.rem2 = {}; //empty after asked for
     return tmp;
   }

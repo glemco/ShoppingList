@@ -78,6 +78,7 @@ export default class EditableItem extends React.Component{
             placeholder="Add new item"
             onChangeText={val=>this.setState({tmp:val})}
             autoFocus={true}
+            autoCapitalize="none"
             style={[styles().txt,{flex:1}]}
           />
           {this.state.tmp.length ? //can't submit empty
