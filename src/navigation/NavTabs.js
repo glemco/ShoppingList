@@ -71,6 +71,7 @@ export default NavTabs = ()=> TabNavigator({
     }
 }, {
     tabBarPosition: 'bottom',
+    backBehavior: 'none',
     tabBarComponent: TabBarBottom,
     animationEnabled: true,
     swipeEnabled: true,
