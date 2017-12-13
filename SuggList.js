@@ -1,8 +1,7 @@
 import React from 'react';
-import { Text, View, Alert, ScrollView,
-        TouchableNativeFeedback } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Text, View, Alert, ScrollView, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Touchable from './Touchable';
 import styles from './StyleSheet.js';
 
 /*
@@ -49,7 +48,7 @@ export default class SuggList extends React.Component{
 
   /*
    * Here all the element (properly filtered) are displayed in a 
-   * TouchableNativeFeedback element that calls the addElement on press,
+   * Touchable element that calls the addElement on press,
    * passing also if the element was in the fridge
    */
   render(){
@@ -62,14 +61,15 @@ export default class SuggList extends React.Component{
         .filter(e=>(this.state.items[e].position=="none" || 
           this.state.items[e].position=="fridge"))
         .map(e=>(<View style={styles().item} key={e}>
-          <TouchableNativeFeedback
+          <Touchable
             onPress={()=>this.addElement(e,
               this.state.items[e].position=="fridge")}>
             <View style={{flexDirection:"row"}}>
-              <Icon name="add-shopping-cart" style={styles().icon}/>
+              <MaterialIcons name="add-shopping-cart"
+                style={styles().icon}/>
               <Text style={styles().txt}>{e}</Text>
             </View>
-          </TouchableNativeFeedback></View>))}
+          </Touchable></View>))}
       </ScrollView>
     </View>;
   }

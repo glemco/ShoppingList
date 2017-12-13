@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View, ActivityIndicator, AsyncStorage,
-  TouchableNativeFeedback, AppState, Alert,
-  ScrollView, Image, TouchableWithoutFeedback, } from 'react-native';
+  TouchableWithoutFeedback, ScrollView, StyleSheet,
+  AppState, Alert, Image, } from 'react-native';
+import Touchable from './Touchable';
 import styles from './StyleSheet.js';
 import Utils from './Utils.js';
 import ModalSelector from './ModalSelector';
@@ -136,6 +137,7 @@ export default class BlankRecipe extends React.Component{
       return;
     }
     this.shopData[value]={name:value};
+    this.setState({openModal:false}); //close it from here too
   }
 
   /*
@@ -149,7 +151,8 @@ export default class BlankRecipe extends React.Component{
       <ScrollView>
         <ModalSelector isVisible={this.state.openModal}
           items={this.state.ingSplit}
-          onSubmit={this.toSend.bind(this)}/>
+          onSubmit={this.toSend.bind(this)}
+          onClose={()=>this.setState({openModal:false})}/>
         <View style={styles().cont}>
           <TouchableWithoutFeedback
             onPress={this.imgUp.bind(this)}>
@@ -163,12 +166,12 @@ export default class BlankRecipe extends React.Component{
           </TouchableWithoutFeedback>
           <Text style={styles().title}>Ingredients</Text>
           {this.state.ingredients.map((e,i)=>
-          <TouchableNativeFeedback key={"ing"+i} 
+          <Touchable key={"ing"+i} 
             onPress={()=>this.openModal(e)}>
             <View style={[styles().item,styles().itemSmall]}>
               <Text style={styles().li}>&#8900; {e}</Text>
             </View>
-          </TouchableNativeFeedback>)}
+          </Touchable>)}
           <Text style={styles().caption}>
             Tap on an ingredient to add it to the shopping list
           </Text>
@@ -177,8 +180,9 @@ export default class BlankRecipe extends React.Component{
           <Text key={"dir"+i} style={styles().li}>{e}</Text>)}
         </View>
       </ScrollView>:
-      <View style={{justifyContent:"center",flex:1}}>
-        <ActivityIndicator size="large"/>
+      <View style={[styles().cont,{justifyContent:"center"}]}>
+        <ActivityIndicator size="large"
+          color={StyleSheet.flatten(styles().title).color}/>
       </View>
 
   }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, View, TextInput, 
-  TouchableNativeFeedback} from 'react-native';
+import { Text, View, TextInput, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Touchable from './Touchable';
 import styles from './StyleSheet.js';
 
 /*
@@ -82,32 +82,32 @@ export default class EditableItem extends React.Component{
             style={[styles().txt,{flex:1}]}
           />
           {this.state.tmp.length ? //can't submit empty
-          (<TouchableNativeFeedback
+          (<Touchable
             onPress={this.sendChange.bind(this)}>
             <MaterialIcons name="done" style={styles().icon}/>
-          </TouchableNativeFeedback>):null}
+          </Touchable>):null}
           {this.state.text.length ? //can't delete new one
-          (<TouchableNativeFeedback
+          (<Touchable
             onPress={this.delChange.bind(this)}>
             <MaterialIcons name="remove-shopping-cart" style={styles().icon}/>
-          </TouchableNativeFeedback>):null}
+          </Touchable>):null}
         </View> 
       ) : (
-        <TouchableNativeFeedback 
+        <Touchable 
           onPress={this.editThis.bind(this)}>
           <View style={styles().item}>
           {this.state.text.length ? //can't delete new one
-            (<TouchableNativeFeedback
+            (<Touchable
               onPress={this.doneChange.bind(this)}>
               <MaterialIcons name="add-circle-outline" style={styles().icon}/>
-            </TouchableNativeFeedback>):null}
+            </Touchable>):null}
             <View style={{flex:1}}>
               <Text style={styles().txt}>
                 {this.state.text?this.state.text:"Add new item"}
               </Text>
             </View>
           </View>
-        </TouchableNativeFeedback> 
+        </Touchable> 
       );
   }
 }

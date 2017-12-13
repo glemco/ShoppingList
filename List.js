@@ -6,7 +6,6 @@ import styles from './StyleSheet.js';
 import ShopList from './ShopList';
 import FridgeList from './FridgeList';
 import SuggList from './SuggList';
-import ColorSets from './ColorSets';
 
 /*
  * data is a local attribute accessible through some static functions
