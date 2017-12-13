@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, Text, } from 'react-native';
 import Styles from '../../styles/StyleSheet';
+import Touchable from '../../styles/Touchable';
 
 export default class Note extends Component {
     
@@ -35,7 +36,7 @@ export default class Note extends Component {
     render() {
         const note = this.props.note;
         return (
-            <TouchableHighlight 
+            <Touchable
                 onPress={() => this.props.editNote(note) }
             >
                 <View style={[styles.container, Styles().mainColorBg]}>
@@ -45,7 +46,7 @@ export default class Note extends Component {
                     </View>
                     <Text style={[Styles().txt, styles.content]}>{note.content}</Text>
                 </View>
-            </TouchableHighlight>
+            </Touchable>
         );
     }
 }

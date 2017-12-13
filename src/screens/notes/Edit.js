@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableNativeFeedback,
+import { View, StyleSheet, Text, 
         Button, TextInput } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Styles from '../../styles/StyleSheet';
+import Touchable from '../../styles/Touchable';
 
 export default class Edit extends Component {
 
@@ -54,7 +55,7 @@ export default class Edit extends Component {
                     })}
                     value={note.title}
                 />
-                <TouchableNativeFeedback
+                <Touchable
                     color={StyleSheet.flatten(Styles().title).color}
                     onPress={() => this.setState({ isDateTimePickerVisible: true })}>
                   <View style={Styles().button}>
@@ -62,7 +63,7 @@ export default class Edit extends Component {
                       {note.date.toString()}
                     </Text>
                   </View>
-                </TouchableNativeFeedback>
+                </Touchable>
                 <DateTimePicker
                     date={new Date(note.date)}
                     isVisible={this.state.isDateTimePickerVisible}
@@ -79,14 +80,14 @@ export default class Edit extends Component {
                     })}
                     value={note.content}
                 />
-                <TouchableNativeFeedback
+                <Touchable
                     onPress={() => this.saveNoteEdit(note)}>
                   <View style={Styles().button}>
                     <Text style={Styles().label}>
                       Save modifications
                     </Text>
                   </View>
-                </TouchableNativeFeedback>
+                </Touchable>
                 <View style={{ flex: 1 }}></View>
                 <Button
                     title="Delete note"

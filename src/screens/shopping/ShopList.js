@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, View, Alert, TouchableWithoutFeedback,
         AsyncStorage, Button, Animated, Dimensions,
-        TouchableNativeFeedback, AppState, RefreshControl,
+        AppState, RefreshControl, StyleSheet,
         ScrollView, Keyboard} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Touchable from './../../styles/Touchable';
 import styles from './../../styles/StyleSheet.js';
 import EditableItem from './EditableItem';
 
@@ -97,11 +98,10 @@ export default class ShopList extends React.Component {
    */
   static navigationOptions(){
     return {
-      headerRight:(<TouchableNativeFeedback
-            style={{fontSize:100}}
+      headerRight:(<Touchable
             onPress={()=>ShopList.navigate("Fridge")}>
             <MaterialCommunityIcons name="fridge" style={[styles().icon,{fontSize:30}]}/>
-          </TouchableNativeFeedback>),
+          </Touchable>),
     };
   }
 
@@ -313,6 +313,9 @@ export default class ShopList extends React.Component {
         <ScrollView keyboardShouldPersistTaps="always"
           refreshControl = {<RefreshControl 
             refreshing={false} 
+            progressBackgroundColor=
+              {StyleSheet.flatten(styles().title).color}
+            colors={[StyleSheet.flatten(styles().cont).backgroundColor]}
             onRefresh={this.refreshData.bind(this)}/>}>
           {Object.keys(this.state.data)
             .map((item) => (<EditableItem 
@@ -334,13 +337,12 @@ export default class ShopList extends React.Component {
         </ScrollView>
         <Animated.View style={{height:this.keyboardHeight,
           left:0,right:0,bottom:0}}/>
-        <TouchableNativeFeedback
-          color="teal"
+        <Touchable
           onPress={()=>navigate("Sugg")}>
           <View style={styles().button}>
             <Text style={styles().label}>NEED HELP?</Text>
           </View>
-        </TouchableNativeFeedback>
+        </Touchable>
         <Button 
           title="Test (I'll not be there)"
           style={styles().button}

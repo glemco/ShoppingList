@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
 
 import { Notifications } from 'expo';
+import Styles from './../../styles/StyleSheet.js';
 
 export default class Test extends Component {
 
@@ -28,24 +29,21 @@ export default class Test extends Component {
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>Test</Text>
-                <Button 
-                    title="Notification"
-                    color="black"
-                    onPress={() => this.notification()}
-                />
-            </View>
-        );
+      return (
+        <View style={[Styles().cont,styles.container]}>
+          <Text style={Styles().title}>Test</Text>
+          <Button 
+              title="Notification"
+              color={StyleSheet.flatten(Styles().bar).backgroundColor}
+              onPress={() => this.notification()}
+          />
+        </View>
+      );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: 'black',
         alignItems: 'center',
         justifyContent: 'center',
     },

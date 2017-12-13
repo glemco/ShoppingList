@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, 
-        TouchableNativeFeedback, } from 'react-native';
+import { View, StyleSheet, Text, } from 'react-native';
 import Styles from '../../styles/StyleSheet';
+import Touchable from '../../styles/Touchable';
 
 import Note from './Note';
 
@@ -21,14 +21,14 @@ export default class NotesCategorie extends Component {
                         editNote={(note) => this.props.editNote(note)}
                     />
                 ))}
-                <TouchableNativeFeedback
+                <Touchable
                     onPress={() => this.props.addNote()}>
                   <View style={Styles().button}>
                     <Text style={Styles().label}>
                       Add
                     </Text>
                   </View>
-                </TouchableNativeFeedback>
+                </Touchable>
             </View>
         );
     }

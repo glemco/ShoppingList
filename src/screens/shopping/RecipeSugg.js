@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View, Alert, ScrollView, Image, RefreshControl,
-        AsyncStorage, TouchableNativeFeedback, 
-        ActivityIndicator,} from 'react-native';
+        AsyncStorage, ActivityIndicator, StyleSheet} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Touchable from './../../styles/Touchable';
 import Utils from './Utils.js';
 import styles from './../../styles/StyleSheet.js';
 
@@ -37,11 +37,11 @@ export default class RecipeSugg extends React.Component {
    */
   static navigationOptions(){
     return {
-      headerRight:(<TouchableNativeFeedback
+      headerRight:(<Touchable
             style={{fontSize:100}}
             onPress={()=>RecipeSugg.reload()}>
             <MaterialIcons name="refresh" style={[styles().icon,{fontSize:30}]}/>
-          </TouchableNativeFeedback>),
+          </Touchable>),
     };
   }
 
@@ -176,7 +176,7 @@ export default class RecipeSugg extends React.Component {
   }
 
   /*
-   * Render all the elements as TouchableNativeFeedback components 
+   * Render all the elements as Touchable components 
    * containing the image, the title and the ingredients that made the 
    * query. By pressing them the BlankRecipe page is called passing 
    * the recipe object to shape it. While elements are still loading,
@@ -185,14 +185,18 @@ export default class RecipeSugg extends React.Component {
    * while all the groups will have loaded
    */
   render(){
+    let mainColor=StyleSheet.flatten(styles().cont).backgroundColor;
+    let secColor=StyleSheet.flatten(styles().title).color;
     return <View style={styles().cont}>
         <ScrollView
           refreshControl = {<RefreshControl 
             refreshing={!this.state.loaded} 
+            progressBackgroundColor={secColor}
+            colors={[mainColor]}
             onRefresh={this.doReload.bind(this)}/>}>
            
         {Object.keys(this.state.data).map((e,i)=>
-          <TouchableNativeFeedback key={i}
+          <Touchable key={i}
             onPress={()=>this.props
               .navigation.navigate("Recipe",{data:this.state.data[e],
                 fridge:this.fridge})}>
@@ -207,10 +211,11 @@ export default class RecipeSugg extends React.Component {
                   {this.state.data[e].ings}</Text>
               </View>
             </View>
-          </TouchableNativeFeedback>)
+          </Touchable>)
           .concat(this.state.loaded?<View key="load"/>:
             <View key="load" style={styles().item}>
-              <ActivityIndicator style={{paddingRight:10}}/>
+              <ActivityIndicator style={{paddingRight:10}}
+                color={StyleSheet.flatten(styles().title).color}/>
               <Text style={styles().caption}>{this.state.loadLog}</Text>
             </View>)}
         </ScrollView>

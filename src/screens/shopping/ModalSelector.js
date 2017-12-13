@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Text, View, Modal, TextInput, 
-  TouchableNativeFeedback, StyleSheet,
+import { Text, View, Modal, TextInput,
   ScrollView, TouchableWithoutFeedback, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Touchable from './../../styles/Touchable';
 import styles from './../../styles/StyleSheet.js';
 
 export default class ModalSelector extends React.Component{
@@ -31,6 +31,11 @@ export default class ModalSelector extends React.Component{
     this.setState({open:false});
   }
 
+  closeIt(){
+    this.props.onClose();
+    this.setState({open:false});
+  }
+
   /*
    * Modal structure with touchable area outside to close it, touchable
    * inside to ensure it won't close (basically it's doing nothing but 
@@ -41,7 +46,7 @@ export default class ModalSelector extends React.Component{
   render(){
     return <Modal onRequestClose={() => null} animationType="fade" 
       visible={this.state.open} transparent={true}>
-      <TouchableWithoutFeedback onPress={()=>this.setState({open:false})}>
+      <TouchableWithoutFeedback onPress={this.closeIt.bind(this)}>
         <View style={styles().modBack}>
           <TouchableWithoutFeedback onPress={()=>null}>
             <View style={styles().modCont}>
@@ -52,7 +57,7 @@ export default class ModalSelector extends React.Component{
               </View>
               <ScrollView style={{height:300}}>
                 {this.props.items.map((e,i)=>
-                <TouchableNativeFeedback key={i}
+                <Touchable key={i}
                   onPress={()=>this.setState({selected:e})}>
                   <View style={[styles().item,styles().itemSmall]}>
                     <MaterialCommunityIcons name={this.state.selected==e?
@@ -60,7 +65,7 @@ export default class ModalSelector extends React.Component{
                       style={styles().icon}/>
                     <Text style={styles().txt}>{e}</Text>
                   </View>
-                </TouchableNativeFeedback>)}
+                </Touchable>)}
                 <View style={[styles().item,styles().itemSmall]}>
                   <MaterialCommunityIcons 
                     name={this.state.selected=="$other"?
@@ -75,18 +80,18 @@ export default class ModalSelector extends React.Component{
               </ScrollView>
               <View
                 style={styles().modFoot}>
-                <TouchableNativeFeedback 
-                  onPress={()=>this.setState({open:false})}>
+                <Touchable 
+                  onPress={this.closeIt.bind(this)}>
                   <Text style={styles().modButt}>
                     CANCEL
                   </Text>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback 
+                </Touchable>
+                <Touchable 
                   onPress={this.sendData.bind(this)}>
                   <Text style={styles().modButt}>
                     OK
                   </Text>
-                </TouchableNativeFeedback>
+                </Touchable>
               </View>
             </View>
           </TouchableWithoutFeedback>
