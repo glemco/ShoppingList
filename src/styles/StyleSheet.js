@@ -141,5 +141,17 @@ export default ()=>{let colors = ColorSets.getStylesheet();
     flex:1,
     justifyContent:"center",
   },
+  calendar_weekdays_today: {
+    flexDirection: 'row',
+    flex: 1,
+    textAlign : 'center',
+    justifyContent: 'center',
+    paddingBottom:3,
+    paddingTop:5,
+    borderColor: colors.second,
+    color:colors.text,
+    borderWidth:3,
+    borderRadius: 20
+  },
 })
 };

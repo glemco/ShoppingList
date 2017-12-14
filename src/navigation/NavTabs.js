@@ -7,7 +7,7 @@ import Home from '../screens/home/Home';
 import Recipes from '../screens/shopping/RecipeStack';
 import NotesStack from './NotesStack';
 import List from '../screens/shopping/List';
-import Calendar from '../screens/calendar/Calendar';
+import Calendar from '../screens/calendar/HomeScreen';
 import Test from '../screens/test/Test';
 import Settings from '../screens/settings/Settings';
 import Styles from '../styles/StyleSheet';
