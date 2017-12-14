@@ -7,7 +7,7 @@ import ColorSets from './ColorSets';
  * instead of a variable they are returned as a function to have updated
  * colors (used in themes)
  * This is a StyleSheet, that means that the object returned is not
- * directly accessable, if u need to retrieve some properties (such as
+ * directly accessible, if u need to retrieve some properties (such as
  * the main color of the current theme) use StyleSheet.flatten(obj.field)
  */
 
