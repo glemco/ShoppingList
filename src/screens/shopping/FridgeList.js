@@ -94,6 +94,7 @@ export default class FridgeList extends React.Component {
       if(this.saved)
         return;
       await AsyncStorage.setItem(ITEM,JSON.stringify(this.state.data));
+      this.saved=true;
     } catch(e){
       Alert.alert(
         'Error',

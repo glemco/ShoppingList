@@ -203,6 +203,7 @@ export default class List extends React.Component {
       if(this.saved)
         return;
       await AsyncStorage.setItem(ITEM,JSON.stringify(this.data));
+      this.saved=true;
     } catch(e){
       Alert.alert(
         'Error',
