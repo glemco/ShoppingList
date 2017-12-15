@@ -40,7 +40,7 @@ export default class saveNoteAdd extends Component {
     render() {
         const note = this.state.note;
         return (
-            <View style={styles.container}>
+            <View style={Styles().cont}>
                 <TextInput
                     style={[Styles().title, styles.title]}
                     placeholder="Title"
@@ -65,7 +65,7 @@ export default class saveNoteAdd extends Component {
                     onCancel={() => this.setState({ isDateTimePickerVisible: false })}
                 />
                 <TextInput
-                    style={Styles().txt}
+                    style={[Styles().txt,{flex:1}]}
                     placeholder="Content"
                     multiline={true}
                     autoGrow={true}
@@ -91,18 +91,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'black',
     },
     title: {
-        color: 'white',
         padding: 5,
-        color: 'yellow',
         fontSize: 40,
     },
     content: {
-        color: 'white',
         padding: 5,
-        color: 'yellow',
     }
 });
 

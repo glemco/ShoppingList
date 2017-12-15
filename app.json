@@ -13,12 +13,22 @@
             "icon": "./assets/icons/loading-icon.png",
             "backgroundColor": "#000000"
         },
+        "notification": {
+          "icon": "./assets/icons/notification-icon.png",
+          "color": "#ffff00"
+        },
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.chardonnay.alfred"
         },
         "android": {
-            "package": "com.chardonnay.alfred"
+            "package": "com.chardonnay.alfred",
+            "icon": "./assets/icons/app-icon.png",
+            "permissions": []
+        },
+        "splash": {
+            "icon": "./assets/icons/loading-icon.png",
+            "backgroundColor": "#000000"
         }
     }
 }

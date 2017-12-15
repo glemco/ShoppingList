@@ -71,7 +71,7 @@ export default class Edit extends Component {
                     onCancel={() => this.setState({ isDateTimePickerVisible: false })}
                 />
                 <TextInput
-                    style={Styles().txt}
+                    style={[Styles().txt,{flex:1}]}
                     multiline={true}
                     autoGrow={true}
                     onChangeText={(text) => this.setState(state => {
