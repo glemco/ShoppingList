@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, View, Alert, ScrollView, Image, RefreshControl,
         AsyncStorage, ActivityIndicator, StyleSheet} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import Touchable from './../../styles/Touchable';
 import Utils from './Utils.js';
+import Touchable from './../../styles/Touchable';
 import styles from './../../styles/StyleSheet.js';
 
 const BASE="http://allrecipes.com";
@@ -86,7 +86,8 @@ export default class RecipeSugg extends React.Component {
   async tryMatching(str,ind,end){
     function getTitle(elm){
       return elm.getElementsByTagName("h3")[0]
-        .firstChild.data.match(/([a-zA-Z0-9'\-(),]+ ?)+/)[0];
+        .getElementsByTagName("a")[0].firstChild.data
+        .match(/([a-zA-Z0-9'\-(),]+ ?)+/)[0];
     }
     function getUrl(elm){
       return BASE+elm.getElementsByTagName("a")[0].
